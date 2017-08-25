@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Header, Button } from 'semantic-ui-react';
+import { Header, Button, Loader } from 'semantic-ui-react';
 
 export class Login extends Component {
   constructor(props) {
@@ -38,14 +38,14 @@ export class Login extends Component {
 
   getLoginButton() {
     if (this.state.loggedIn === null) {
-      return <Header as="h3">Loading...</Header>
+      return <Loader active inline size="large">Loading...</Loader>
     }
 
     if (this.state.loggedIn === false) {
       return <Button onClick={this.onLoginClick}>Continue with Facebook</Button>
     }
 
-    return <Button onClick={() => FB.logout(res => console.log(res))}>Log Out</Button>
+    return <Button onClick={() => FB.logout(res => this.setState({ loggedIn: false }))}>Log Out</Button>
   }
 
   render() {
@@ -58,7 +58,7 @@ export class Login extends Component {
         height: '100vh',
         flexDirection: 'column',
       }}>
-        <Header as="h1">Ghetto Pool</Header>
+        <Header as="h1">Ghetto Pool Party</Header>
         {this.getLoginButton()}
       </div>
     )

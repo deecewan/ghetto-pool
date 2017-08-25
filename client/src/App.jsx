@@ -6,7 +6,7 @@ import Login from './views/Login';
 
 window.fbAsyncInit = function() {
   FB.init({
-    appId            : '124697041508763',
+    appId            : process.env.FACEBOOK_APP_ID,
     autoLogAppEvents : true,
     xfbml            : true,
     version          : 'v2.10'
