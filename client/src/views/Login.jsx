@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Header, Button, Loader } from 'semantic-ui-react';
+import axios from 'axios';
 import logger from '../util/logger';
 
 export class Login extends Component {
@@ -16,7 +17,11 @@ export class Login extends Component {
     FB.getLoginStatus((res) => {
       logger('getLoginStatus res', res);
       if (res.status === 'connected') {
-        this.setState({ loggedIn: true });
+        axios.post('/login', {
+          data: res.authResponse,
+        }).then(tokenInfo => {
+          this.setState({ loggedIn: true });
+        });
       } else {
         this.setState({ loggedIn: false });
       }
