@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: ghetto_pool_development
+
+test:
+  <<: *default
+  database: ghetto_pool_test
+
+production:
+  <<: *default
+  database: ghetto_pool_production
+  username: ghetto_pool
+  password: <%= ENV['GHETTO_POOL_DATABASE_PASSWORD'] %>
