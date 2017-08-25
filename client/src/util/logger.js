@@ -5,7 +5,7 @@ function createLogger(type) {
     if (process.env.NODE_ENV === 'development') {
       return console.log(`[${type}]`, ...args);
     }
-    return axios.post('/logs', { data: JSON.stringify(args) });
+    return axios.post('/log', { data: JSON.stringify(args) });
   }
 }
 
