@@ -4,6 +4,6 @@
 *.iml
 *.log
 /server/tmp
-/server/.env.production
+/server/.env
 .vscode/
 client/out

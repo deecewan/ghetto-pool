@@ -38,8 +38,9 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
-    bcrypt (3.1.11)
     builder (3.2.3)
     byebug (9.1.0)
     concurrent-ruby (1.0.5)
@@ -48,9 +49,16 @@ GEM
       dotenv (= 2.2.1)
       railties (>= 3.2, < 5.2)
     erubi (1.6.1)
+    faraday (0.12.2)
+      multipart-post (>= 1.2, < 3)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     i18n (0.8.6)
+    json (2.1.0)
+    koala (3.0.0)
+      addressable
+      faraday
+      json (>= 1.8)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.6)
@@ -61,10 +69,12 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.2.0)
     minitest (5.10.3)
+    multipart-post (2.0.0)
     nio4r (2.1.0)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
     pg (0.21.0)
+    public_suffix (3.0.0)
     puma (3.10.0)
     rack (2.0.3)
     rack-test (0.6.3)
@@ -112,9 +122,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bcrypt (~> 3.1.7)
   byebug
   dotenv-rails
+  koala
   pg (~> 0.18)
   puma (~> 3.7)
   rails (~> 5.1.3)
