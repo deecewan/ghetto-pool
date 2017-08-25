@@ -16,11 +16,11 @@ class SessionController < ApplicationController
 
     user = User.find_or_create_from_fb(p[:accessToken])
     session[:user_id] = user.id
-    redirect_to('/')
+    render(json: { accessToken: user.fb_token })
   end
 
   private
   def auth_failure
-
+    render json: { error: 'you failed' }, status: 400
   end
 end
