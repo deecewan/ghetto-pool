@@ -5,3 +5,5 @@
 *.log
 /server/tmp
 /server/.env.production
+.vscode/
+client/out
