@@ -26,6 +26,14 @@ export class Index extends Component {
     bg.stop();
   }
 
+  getProfileImage() {
+    if (!this.props.profileImage) {
+      return null
+    }
+
+    return <img src={this.props.profileImage} />
+  }
+
   getTravelButton() {
     return <Button content='Travel' icon='map outline' labelPosition='right' onClick={this.onTravelClick} />
   }
@@ -65,6 +73,7 @@ export class Index extends Component {
       }}>
         <Image src='https://iwsmt-content-ok2nbdvvyp8jbrhdp.stackpathdns.com/July-27-2011-01-03-26-tumblr_ljoazy4Uk31qzpzfmo1_500.jpeg'/>
         <Header as="h1" color='grey'>Ghetto Pool</Header>
+        {this.getProfileImage()}
         {this.getTravelButton()}
         {this.getLogoutButton()}
         {this.state.travelling ? this.getTravellingList() : null}
@@ -73,4 +82,15 @@ export class Index extends Component {
   }
 }
 
-export default connect(() => ({}), { logOut })(Index)
+const mapStateToProps = (state) => {
+  const currUserId = state.config.id;
+
+  let profileImage;
+  if (currUserId && state.users[currUserId] && state.users[currUserId].photo) {
+    profileImage = state.users[currUserId].photo;
+  }
+
+  return { profileImage };
+};
+
+export default connect(mapStateToProps, { logOut })(Index);

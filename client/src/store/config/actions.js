@@ -1,3 +1,5 @@
+import { addUserById } from "../users/actions";
+
 export function markFBReady() {
   console.log('fb is ready');
   return {
@@ -6,9 +8,12 @@ export function markFBReady() {
 }
 
 export function logIn(accessToken, id) {
-  return {
-    type: '@CONFIG/LOGGED_IN',
-    payload: { accessToken, id },
+  return (dispatch) => {
+    dispatch(addUserById(id));
+    return dispatch({
+      type: '@CONFIG/LOGGED_IN',
+      payload: { accessToken, id },
+    });
   };
 }
 
