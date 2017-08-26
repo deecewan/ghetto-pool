@@ -44,6 +44,7 @@ export class Travel extends Component {
       data: {
         destination: this.state.destination,
         depart_at: Date.now() / 1000 + this.state.time * 60,
+        transport_method: this.state.transport,
       },
     }).then(({ data: { trip_id, inviteable_facebook_ids } }) => {
       this.setState({ loading: false, tripId: trip_id, inviteableFacebookIds: inviteable_facebook_ids })
