@@ -73,7 +73,6 @@ export class Login extends Component {
   }
 
   render() {
-    console.log(this.props, this.state);
     return (
       <div style={{
         display: 'flex',

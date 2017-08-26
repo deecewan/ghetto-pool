@@ -76,8 +76,6 @@ Req
 ```json
 {
   "data": {
-    "lat": 12.34, // Current location
-    "lng": -56.78,
     "destination": "My House",
     "depart_at": 1503724220 // Unix date time
   }

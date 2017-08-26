@@ -49,7 +49,8 @@ class TravelController < ApplicationController
 
   def create
     p = params.require(:data)
-    location = current_user.location_histories.create!(p.permit(:lat, :lng))
+
+    location = current_user.location_histories.latest_for_each_user.first
 
     invitable_fb_ids = LocationHistory
         .joins(:user)

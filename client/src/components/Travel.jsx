@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Input, Dropdown } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { Button, Input, Dropdown, Loader } from 'semantic-ui-react';
+import axios from 'axios';
+import { addUserById } from '../store/users/actions'
 
 const timeOptions = [{ text: '15 minutes', value: 15 }, { text: '30 minutes', value: 30 }, { text: '1 hour', value: 60 }]
 
@@ -9,13 +12,17 @@ export class Travel extends Component {
 
     this.state = {
       destination: '',
-      time: 0,
+      time: 0, // in minutes
       transport: 'car',
+      loading: false,
+      tripId: null,
+      inviteableFacebookIds: [],
     };
 
     this.updateDestination = this.updateDestination.bind(this);
     this.updateTime = this.updateTime.bind(this);
     this.updateTransport = this.updateTransport.bind(this);
+    this.submitNewTrip = this.submitNewTrip.bind(this);
   }
 
   updateDestination(e) {
@@ -30,15 +37,51 @@ export class Travel extends Component {
     this.setState({ transport: value });
   }
 
+  submitNewTrip() {
+    this.setState({ loading: true })
+
+    axios.post('/trips', {
+      data: {
+        destination: this.state.destination,
+        depart_at: Date.now() / 1000 + this.state.time * 60,
+      },
+    }).then(({ data: { trip_id, inviteable_facebook_ids } }) => {
+      this.setState({ loading: false, tripId: trip_id, inviteableFacebookIds: inviteable_facebook_ids })
+      inviteable_facebook_ids.map(this.props.addUserById)
+    })
+  }
+
   getSubmitButton() {
     if (!this.state.destination || !this.state.time) {
       return null;
     }
 
-    return <Button>Submit</Button>;
+    return <Button onClick={this.submitNewTrip}>Submit</Button>;
   }
 
-  render() {
+  renderTransportButton(transportType, icon) {
+    return (
+      <Button
+        color={this.state.transport === transportType ? 'blue' : null}
+        icon={icon}
+        onClick={() => this.updateTransport(transportType)}
+      />
+    )
+  }
+
+  renderLoadingState() {
+    return (
+      <div>
+        <Loader active inline size="large">Loading...</Loader>
+      </div>
+    )
+  }
+
+  renderFriendSelection() {
+    return <div>WHO ARE YOUR FRIENDS???</div>
+  }
+
+  renderNewTrip() {
     return (
       <div>
         <Input
@@ -50,16 +93,32 @@ export class Travel extends Component {
         />
         <Dropdown placeholder='When are you leaving?' fluid selection options={timeOptions} onChange={this.updateTime} />
         <Button.Group>
-          <Button color={this.state.transport === 'car' ? 'blue' : null} icon="car" onClick={() => this.updateTransport('car')} value={10}/>
-          <Button color={this.state.transport === 'bus' ? 'blue' : null} icon="bus" onClick={() => this.updateTransport('bus')} />
-          <Button color={this.state.transport === 'plane' ? 'blue' : null} icon="military" onClick={() => this.updateTransport('plane')} />
-          <Button color={this.state.transport === 'ship' ? 'blue' : null} icon="ship" onClick={() => this.updateTransport('ship')} />
-          <Button color={this.state.transport === 'walk' ? 'blue' : null} icon="blind" onClick={() => this.updateTransport('walk')} />
+          {this.renderTransportButton('car', 'car')}
+          {this.renderTransportButton('bus', 'bus')}
+          {this.renderTransportButton('plane', 'military')}
+          {this.renderTransportButton('ship', 'ship')}
+          {this.renderTransportButton('walk', 'blind')}
         </Button.Group>
         {this.getSubmitButton()}
       </div>
     );
   }
+
+  render() {
+    if (this.state.loading) {
+      return this.renderLoadingState();
+    } else if (this.state.tripId) {
+      return this.renderFriendSelection();
+    } else {
+      return this.renderNewTrip();
+    }
+  }
 }
 
-export default Travel;
+const mapStateToProps = (state) => {
+  return {
+    users: state.users
+  }
+};
+
+export default connect(mapStateToProps, { addUserById })(Travel);
