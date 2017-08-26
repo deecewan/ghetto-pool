@@ -24,8 +24,8 @@ class TravelController < ApplicationController
   end
 
   def journeys
-    tps = TripPassenger.where(user_id: current_user.id).joins(trip: :user, trip: {trip_passengers: :user})
-              .preload(:trip, trip: :user, trip: {trip_passengers: :user})
+    tps = TripPassenger.where(user_id: current_user.id).joins(trip: [:user, {trip_passengers: :user}])
+              .preload(:trip, trip: [:user, { trip_passengers: :user }])
 
     trips = tps.map(&:trip).map do |t|
       {
