@@ -1,8 +1,15 @@
+import { addUsers } from "../users/actions"
+
 export function getTrips() {
   return (dispatch) => {
     axios.get('/trips')
       .then(({ data: { trips }}) => {
-        trips.map(trip => dispatch(addTrip(trip)));
+        trips
+          .map((trip) => {
+            dispatch(addUsers(trip.passengers))
+            return trip
+          })
+          .map(trip => dispatch(addTrip(trip)))
       })
   }
 }

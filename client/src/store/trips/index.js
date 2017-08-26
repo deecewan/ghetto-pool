@@ -1,7 +1,5 @@
 function marshallPassenger(passenger) {
   return {
-    firstName: passenger.first_name,
-    lastName: passenger.last_name,
     accepted: passenger.accepted,
     id: passenger.user_id,
   };
