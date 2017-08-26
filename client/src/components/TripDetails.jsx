@@ -5,11 +5,6 @@ import TimeAgo from 'react-timeago';
 import { filter } from 'lodash';
 
 export default class TripDetails extends Component {
-  constructor(props) {
-    super(props);
-    this.inPast = Date.now() > this.props.departAt;
-  }
-
   renderPassengerInformation() {
     if (!this.props.open) {
       return null
@@ -34,7 +29,7 @@ export default class TripDetails extends Component {
       return <Icon name="check" color="green" />;
     }
 
-    if (this.inPast) {
+    if (this.props.inPast) {
       return <Icon name="remove" color="red" />;
     }
 
@@ -44,7 +39,7 @@ export default class TripDetails extends Component {
   renderPassengerCard(passenger, bottomRadius) {
     const backgroundColor = passenger.accepted
       ? "#e8f8ec"
-      : this.inPast
+      : this.props.inPast
         ? "#fbe9e9"
         : "";
 
@@ -92,7 +87,7 @@ export default class TripDetails extends Component {
 
   getTripDetails() {
     const tripOwnerImager = this.props.invitedBy
-      ? <Image floated='right' size='mini' src={this.props.invitedBy.photo} />
+      ? <Image floated='right' shape="rounded" size='mini' src={this.props.invitedBy.photo} />
       : null;
 
     const tripOwnerName = this.props.type === 'journey'
@@ -111,7 +106,7 @@ export default class TripDetails extends Component {
               {tripOwnerName}
             </Card.Header>
             <Card.Meta>
-              <span>{`${this.inPast ? 'Left for' : 'Leaving for'} ${this.props.destination}${this.inPast ? '' : ' in'}`}</span>
+              <span>{`${this.props.inPast ? 'Left for' : 'Leaving for'} ${this.props.destination}${this.props.inPast ? '' : ' in'}`}</span>
               <TimeAgo date={this.props.departAt} />
             </Card.Meta>
             <Card.Meta>
