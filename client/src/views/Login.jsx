@@ -43,18 +43,27 @@ export class Login extends Component {
 
   getLoginButton() {
     if (!this.props.fbReady) {
-      return <Loader active inline size="large">Loading...</Loader>
+      return <Loader active inverted inline size="large">Loading...</Loader>
     }
     if (this.state.loggingIn) {
-      return <Loader active inline size="large">Logging In...</Loader>
+      return <Loader active inverted inline size="large">Logging In...</Loader>
     }
     if (this.props.loggedIn === false) {
       return (
-        <Button onClick={this.onLoginClick} color="facebook">
-          <Icon.Group size='large'>
-            <Icon name='facebook square' size="large" />
-          </Icon.Group>
-          Continue with Facebook
+        <Button onClick={this.onLoginClick} color="facebook" size="large">
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Icon.Group size='large'>
+              <Icon name='facebook square' size="large" />
+            </Icon.Group>
+            <span style={{ paddingRight: "1rem" }}>
+              Continue with Facebook
+            </span>
+          </div>
         </Button>
       );
     }
@@ -62,11 +71,23 @@ export class Login extends Component {
     return
   }
 
+  getFadedIcons() {
+    return (
+      <div>
+        <Icon name="car" size="huge" color="grey" />
+        <Icon name="blind" size="huge" color="grey" />
+        <Icon name="bus" size="huge" color="grey" />
+        <Icon name="military" size="huge" color="grey" />
+        <Icon name="ship" size="huge" color="grey" />
+      </div>
+    )
+  }
+
   sendLogin(res) {
     axios.post('/login', {
       data: res.authResponse,
-    }).then(({ data: { access_token, user_id } }) => {
-      this.setState({ loggedIn: true, loggingIn: false });
+    }).then(({data: {access_token, user_id}}) => {
+      this.setState({loggedIn: true, loggingIn: false});
       this.props.dispatch(logIn(access_token, user_id));
     })
       .catch(err => {
@@ -87,10 +108,23 @@ export class Login extends Component {
         alignItems: 'center',
         height: '100vh',
         flexDirection: 'column',
+        background: 'linear-gradient(to bottom right, #505050, #303030)',
       }}>
-        <Header as="h1">Ghetto Pool Party</Header>
-        {this.getLoginButton()}
-        {this.state.error}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          maxHeight: '20rem',
+          height: '100%',
+          flexDirection: 'column',
+        }}>
+          <Header dividing inverted size="huge" color="grey">GHETTO POOL</Header>
+          {this.getFadedIcons()}
+          <div>
+            {this.getLoginButton()}
+            {this.state.error}
+          </div>
+        </div>
       </div>
     )
   }
