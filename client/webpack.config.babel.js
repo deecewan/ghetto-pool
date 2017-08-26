@@ -7,15 +7,16 @@ dotenv.config({ path: '../server/.env' })
 
 const DEBUG = process.env.NODE_ENV === 'development'
 
-export default {
+const config = {
   entry: "./src/index.jsx",
   output: {
     path: join(__dirname, 'out'),
-    filename: "bundle.js"
+    filename: "[name].js"
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
   },
+  devtool: 'inline-sourcemap',
   module: {
     rules: [{
       test: /\.jsx?$/,
@@ -37,3 +38,11 @@ export default {
     })
   ]
 }
+
+if (!DEBUG) {
+  config.output.filename = '[chunkhash].js'
+  config.devtool = 'sourcemap';
+  config.plugins.unshift(new webpack.optimize.UglifyJsPlugin({ sourceMap: true }));
+}
+
+export default config;
