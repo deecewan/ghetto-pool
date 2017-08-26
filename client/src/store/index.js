@@ -3,4 +3,8 @@ import reducer from './reducer';
 
 const initialState = {}; // { config: { loggedIn: true } }
 
-export default createStore(reducer, initialState);
+export default createStore(
+  reducer,
+  initialState,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Header, Button, Loader, Icon } from 'semantic-ui-react';
 import axios from 'axios';
 import logger from '../util/logger';
+import { logIn } from '../store/config/actions';
 
 export class Login extends Component {
   constructor(props) {
@@ -63,8 +64,9 @@ export class Login extends Component {
   sendLogin(res) {
     axios.post('/login', {
       data: res.authResponse,
-    }).then(tokenInfo => {
+    }).then(({ data: { accessToken } }) => {
       this.setState({ loggedIn: true, loggingIn: false });
+      this.props.dispatch(logIn(accessToken));
     })
     .catch(err => this.setState({ loggingIn: false, loggedIn: false, error: err.message }));
   }
