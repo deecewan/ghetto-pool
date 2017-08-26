@@ -13,7 +13,7 @@ class User < ApplicationRecord
       fb_token: long_lived_token,
     )
 
-    user.save!
+    user.save! if user.changed?
     user
   end
 end

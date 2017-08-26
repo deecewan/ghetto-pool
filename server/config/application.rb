@@ -20,6 +20,9 @@ Dotenv::Railtie.load
 
 module GhettoPool
   class Application < Rails::Application
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore, key: '_ghetto_party'
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
 

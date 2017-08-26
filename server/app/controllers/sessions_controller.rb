@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action :authorize, only: [:logout]
+
   def login
     p = params.require(:data).permit(:accessToken, :expiresIn, :userID)
 
@@ -15,8 +17,14 @@ class SessionsController < ApplicationController
     end
 
     user = User.find_or_create_from_fb(p[:accessToken])
+
     session[:user_id] = user.id
     render(json: { accessToken: user.fb_token })
+  end
+
+  def logout
+    session[:user_id] = nil
+    head :ok
   end
 
   private
