@@ -25,7 +25,7 @@ export class TripDetails extends Component {
         alignItems: 'center',
       }}
       >
-        <Button style={{ marginTop: 3, marginBottom: 3 }}>{this.props.id}</Button>
+        <Button style={{ width: '190', marginTop: 3, marginBottom: 3 }}>{this.props.destination}</Button>
       </div>
     )
   }
@@ -70,8 +70,7 @@ export class TripDetails extends Component {
           flexDirection: 'column',
           alignItems: 'center',
         }}
-        > Trip to: {this.props.destination} <br></br>
-          Leaving at: {moment(this.props.departAt).format('H:mm')}  <br></br>
+        > Leaving at: {moment(this.props.departAt).format('H:mm')}  <br></br>
           Hosted by: {this.props.type === 'journey' ? this.printHostName() : "you"}
           <br></br>Transport: {this.props.transportMethod} <br></br>
           {/* Accepted: {this.props.passenger.map(p => p.accepted).join('. ')} */}
