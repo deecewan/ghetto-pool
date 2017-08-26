@@ -1,7 +1,7 @@
 class TravelController < ApplicationController
   before_action :authorize
 
-  def start
+  def create
     p = params.require(:data)
     location = current_user.location_histories.create!(p.permit(:lat, :lng))
 
@@ -21,17 +21,15 @@ class TravelController < ApplicationController
     render json: { trip_id: trip.id, inviteable_facebook_ids: invitable_fb_ids }
   end
 
-  def confirm_friends
-    p = params.require(:data)
-    trip = current_user.trips.find_by(id: p[:trip_id])
-    fb_ids = current_user.fb_friend_ids & p.fetch(:invited_facebook_id, [])
+  def invite_friends
+    trip = current_user.trips.find_by(id: params[:id])
+    fb_ids = current_user.fb_friend_ids & params.require(:data).fetch(:invited_facebook_id, [])
     trip.passengers = User.find_by(fb_id: fb_ids)
     head :ok
   end
 
-  def accept_trip
-    p = params.require(:data)
-    tp = current_user.trip_passengers.where(trip_id: p[:trip_id])
+  def accept
+    tp = current_user.trip_passengers.where(trip_id: params[:id])
     tp.update_attributes(accepted: true)
     head :ok
   end

@@ -5,6 +5,12 @@ Rails.application.routes.draw do
       post :current, to: 'locations#current'
     end
 
+    scope :trip do
+      post '/', to: 'travel#create'
+      put ':id/invite', to: 'travel#invite_friends'
+      post ':id/accept', to: 'travel#accept'
+    end
+
     # Auth
     post :login, to: 'sessions#login'
     delete :logout, to: 'sessions#logout'
