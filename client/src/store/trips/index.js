@@ -10,7 +10,7 @@ function addTrip(state, trip) {
     ...state,
     [trip.id]: {
       departAt: trip.depart_at * 1000,
-      transportMethod: journey.transport_method,
+      transportMethod: trip.transport_method,
       destination: trip.destination,
       passengers: trip.passengers.map(marshallPassenger),
     }
