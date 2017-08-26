@@ -3,17 +3,26 @@ import { connect } from 'react-redux';
 import compact from 'lodash/compact';
 import map from 'lodash/map';
 import TripDetails from './TripDetails';
+import { filter } from 'lodash';
 
 export class TripList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {openTripId: null}
-    this.tripClick = e => this.setState({openTripId: e.target.value});
+
+    this.tripClick = e => {
+      if (this.state.openTripId === e.target.value) {
+        this.setState({openTripId: null});
+      } else {
+        this.setState({openTripId: e.target.value});
+      }
+    }
   }
 
   renderTripCard(trip) {
-    const passengers = compact(trip.passengers.map(p => ({ ...p, ...this.props.users[p.id] })))
+    const passengers = compact(filter(trip.passengers, p => p.id !== this.props.ownId)
+      .map(p => ({ ...p, ...this.props.users[p.id] })))
       .sort((pa, pb) => pa.accepted ^ pb.accepted);
 
     let tripProps;
@@ -44,7 +53,10 @@ export class TripList extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{
+        width: "80%",
+        maxWidth: "40rem",
+      }}>
         {this.props.trips.map(t => this.renderTripCard(t))}
       </div>
     );
@@ -59,6 +71,7 @@ const mapStateToProps = (state) => {
   return {
     trips: allTrips,
     users: state.users,
+    ownId: state.config.id,
   };
 };
 

@@ -1,44 +1,31 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Comment, Header, Image, Icon } from 'semantic-ui-react';
-import moment from 'moment';
+import { Button, Card, Comment, Header, Image, Icon } from 'semantic-ui-react';
+import TimeAgo from 'react-timeago';
+import { filter } from 'lodash';
 
 export default class TripDetails extends Component {
   constructor(props) {
     super(props);
+    this.inPast = Date.now() > this.props.departAt;
+  }
 
-    this.getTripDetails = this.getTripDetails.bind(this);
-    this.printHostName = this.printHostName.bind(this);
-
-    this.onClick = e => {
-      e.target.value = props.id;
-      props.onClick(e);
+  renderPassengerInformation() {
+    if (!this.props.open) {
+      return null
     }
 
-    this.inPast = Date.now() > this.props.departAt
-  }
+    const passengerLength = Object.keys(this.props.passengers).length
+    if (passengerLength < 1) {
+      return null
+    }
 
-  getTrips() {
     return (
-      <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}>
-        <Button style={{ marginTop: 3, marginBottom: 3 }}>{this.props.destination}</Button>
-      </div>
-    )
-  }
-
-  printHostName() {
-    return (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}>
-          {this.props.hostedBy}
+      <Card.Content extra>
+        <div style={{ margin: "0 -1rem -0.75rem" }}>
+          {this.props.passengers.map((p, i) => this.renderPassengerCard(p, i === passengerLength - 1))}
         </div>
+      </Card.Content>
     )
   }
 
@@ -54,7 +41,7 @@ export default class TripDetails extends Component {
     return null;
   }
 
-  renderPassengerCard(passenger) {
+  renderPassengerCard(passenger, bottomRadius) {
     const backgroundColor = passenger.accepted
       ? "#e8f8ec"
       : this.inPast
@@ -66,8 +53,11 @@ export default class TripDetails extends Component {
         style={{
           display: "flex",
           width: "100%",
-          height: "2.5rem",
+          height: "3rem",
+          padding: "0 2rem",
           backgroundColor,
+          borderBottomRightRadius: bottomRadius ? "4px" : null,
+          borderBottomLeftRadius: bottomRadius ? "4px" : null,
         }}
         key={passenger.id}
       >
@@ -75,6 +65,7 @@ export default class TripDetails extends Component {
           display: "flex",
           justifyContent: "center",
           flexDirection: "column",
+          paddingRight: "1rem",
         }}>
           <Image
             src={passenger.photo}
@@ -100,17 +91,37 @@ export default class TripDetails extends Component {
   }
 
   getTripDetails() {
+    const tripOwnerImager = this.props.invitedBy
+      ? <Image floated='right' size='mini' src={this.props.invitedBy.photo} />
+      : null;
+
+    const tripOwnerName = this.props.type === 'journey'
+      ? `${this.props.invitedBy.firstName}'s Trip`
+      : 'Your Trip';
+
     return (
       <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-      >
-        Leaving at: {moment(this.props.departAt).format('H:mm')}  <br></br>
-        Hosted by: {this.props.type === 'journey' ? this.printHostName() : "you"}
-        <br></br>Transport: {this.props.transportMethod} <br></br>
-        {this.props.passengers.map(p => this.renderPassengerCard(p))}
+        width: "100%",
+        marginBottom: "1rem",
+      }}>
+        <Card fluid link>
+          <Card.Content>
+            {tripOwnerImager}
+            <Card.Header>
+              {tripOwnerName}
+            </Card.Header>
+            <Card.Meta>
+              <span>{`${this.inPast ? 'Left for' : 'Leaving for'} ${this.props.destination}${this.inPast ? '' : ' in'}`}</span>
+              <TimeAgo date={this.props.departAt} />
+            </Card.Meta>
+            <Card.Meta>
+              <div style={{ marginRight: "0" }}>
+                <strong>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{Object.keys(this.props.passengers).length}</strong> have accepted.
+              </div>
+            </Card.Meta>
+          </Card.Content>
+          {this.renderPassengerInformation()}
+        </Card>
       </div>
     )
   }
@@ -123,10 +134,12 @@ export default class TripDetails extends Component {
           alignItems: 'center',
           flexDirection: 'column',
         }}
-        onClick={this.onClick}
+        onClick={e => {
+          e.target.value = this.props.id;
+          this.props.onClick(e);
+        }}
       >
-        {this.getTrips()}
-        {this.props.open ? this.getTripDetails() : null}
+        {this.getTripDetails()}
       </div>
     )
   }
