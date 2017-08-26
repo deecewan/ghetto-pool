@@ -31,7 +31,7 @@ export class Index extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Header as="h1">Ghetto Pool Party</Header>
         {this.getLogoutButton()}
       </div>
