@@ -1,4 +1,4 @@
-class SessionController < ApplicationController
+class SessionsController < ApplicationController
   def login
     p = params.permit(:accessToken, :expiresIn, :userID)
 
