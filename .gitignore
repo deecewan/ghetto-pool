@@ -7,3 +7,4 @@
 /server/.env
 .vscode/
 client/out
+.DS_Store

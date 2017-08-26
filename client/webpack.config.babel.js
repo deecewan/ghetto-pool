@@ -1,6 +1,7 @@
 import { join } from 'path';
 import webpack from 'webpack';
 import HTMLWebpackPlugin from 'html-webpack-plugin';
+import FaviconPlugin from 'favicons-webpack-plugin';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../server/.env' })
@@ -35,6 +36,7 @@ const config = {
   },
   plugins: [
     new HTMLWebpackPlugin({ template: './src/index.html' }),
+    new FaviconPlugin('./src/favicon.png'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       'process.env.FACEBOOK_APP_ID': DEBUG ? process.env.DEV_FACEBOOK_APP_ID : process.env.FACEBOOK_APP_ID,
