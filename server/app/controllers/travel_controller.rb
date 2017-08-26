@@ -77,10 +77,10 @@ class TravelController < ApplicationController
     render json: { trip_id: trip.id, inviteable_facebook_ids: invitable_fb_ids }
   end
 
-  def invite_friends
+  def invite
     trip = current_user.trips.find_by(id: params[:id])
     fb_ids = current_user.fb_friend_ids & params.require(:data).fetch(:invited_facebook_ids, [])
-    trip.passengers = User.find_by(fb_id: fb_ids)
+    trip.passengers = User.where(fb_id: fb_ids)
     head :ok
   end
 

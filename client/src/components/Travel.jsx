@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Input, Dropdown, Loader } from 'semantic-ui-react';
 import axios from 'axios';
+import { values, map } from 'lodash';
+import { pickBy, keys, compose } from 'lodash/fp';
+import { getTrips } from '../store/trips/actions';
+import FriendList from '../components/FriendList';
 import { addUserById } from '../store/users/actions'
 
 const timeOptions = [{ text: '15 minutes', value: 15 }, { text: '30 minutes', value: 30 }, { text: '1 hour', value: 60 }]
@@ -17,12 +21,15 @@ export class Travel extends Component {
       loading: false,
       tripId: null,
       inviteableFacebookIds: [],
+      selectedFriends: [],
     };
 
     this.updateDestination = this.updateDestination.bind(this);
     this.updateTime = this.updateTime.bind(this);
     this.updateTransport = this.updateTransport.bind(this);
     this.submitNewTrip = this.submitNewTrip.bind(this);
+    this.onFriendClick = this.onFriendClick.bind(this);
+    this.submitInvites = this.submitInvites.bind(this);
   }
 
   updateDestination(e) {
@@ -47,8 +54,14 @@ export class Travel extends Component {
         transport_method: this.state.transport,
       },
     }).then(({ data: { trip_id, inviteable_facebook_ids } }) => {
-      this.setState({ loading: false, tripId: trip_id, inviteableFacebookIds: inviteable_facebook_ids })
-      inviteable_facebook_ids.map(this.props.addUserById)
+      const ps = inviteable_facebook_ids.map(this.props.addUserById)
+
+      Promise.all(ps)
+        .then(() => this.setState({
+          loading: false,
+          tripId: trip_id,
+          inviteableFacebookIds: inviteable_facebook_ids.map(id => ({ [id]: false })).reduce((acc, curr) => ({ ...acc, ...curr}), {}),
+        }))
     })
   }
 
@@ -82,8 +95,23 @@ export class Travel extends Component {
     return { marginTop: 3, marginBottom: 3 };
   }
 
+  onFriendClick(id) {
+    this.setState({
+      inviteableFacebookIds: {
+        ...this.state.inviteableFacebookIds,
+        [id]: !this.state.inviteableFacebookIds[id]
+      }
+    });
+  }
+
   renderFriendSelection() {
-    return <div>WHO ARE YOUR FRIENDS???</div>
+    const invitable = map(this.state.inviteableFacebookIds, (invited, id) => ({
+      id,
+      invited,
+      ...this.props.users[id],
+    }))
+
+    return <FriendList friends={invitable} onFriendClick={this.onFriendClick} />
   }
 
   renderNewTrip() {
@@ -110,11 +138,54 @@ export class Travel extends Component {
     );
   }
 
+  submitInvites() {
+    this.setState({ loading: true });
+    const invites = compose(keys, pickBy(v => v))(this.state.inviteableFacebookIds)
+    axios.put(`/trips/${this.state.tripId}/invite`, {
+      data: {
+        invited_facebook_ids: invites,
+      }
+    })
+      .then(() => this.setState({ loading: false, tripId: null, inviteableFacebookIds: [] }))
+      .then(() => this.props.getTrips())
+      .then(() => this.props.onTripSubmit())
+  }
+
+  getInviteButton() {
+    if (values(this.state.inviteableFacebookIds).length === 0) {
+      return <Button>Submit Trip</Button>
+    }
+
+    return (
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        width: '100%',
+        left: 0,
+        backgroundColor: 'white',
+        padding: 5
+      }}>
+        <Button
+          style={{ marginBottom: 10, width: '90%', marginLeft: '5%' }}
+          color="green"
+          onClick={this.submitInvites}
+        >
+          Invite {values(this.state.inviteableFacebookIds).filter(x => x).length} Friends.
+        </Button>
+      </div>
+    );
+  }
+
   render() {
     if (this.state.loading) {
       return this.renderLoadingState();
     } else if (this.state.tripId) {
-      return this.renderFriendSelection();
+      return (
+        <div>
+          {this.renderFriendSelection()}
+          {this.getInviteButton()}
+        </div>
+      )
     } else {
       return this.renderNewTrip();
     }
@@ -123,8 +194,8 @@ export class Travel extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    users: state.users
+    users: state.users,
   }
 };
 
-export default connect(mapStateToProps, { addUserById })(Travel);
+export default connect(mapStateToProps, { addUserById, getTrips })(Travel);

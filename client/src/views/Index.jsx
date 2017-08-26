@@ -17,6 +17,7 @@ export class Index extends Component {
     this.onLogoutClick = this.onLogoutClick.bind(this);
     this.onNewClick = this.onNewClick.bind(this);
     this.onTripsClick = this.onTripsClick.bind(this);
+    this.onTripSubmit = this.onTripSubmit.bind(this);
   }
 
   componentWillMount() {
@@ -45,6 +46,10 @@ export class Index extends Component {
         Welcome Back, {this.props.profileName}.
       </div>
     )
+  }
+
+  onTripSubmit() {
+    this.setState({ page: 'trips' });
   }
 
   getTravelButton() {
@@ -119,7 +124,7 @@ export class Index extends Component {
       return <TripList />;
     }
 
-    return <Travel />;
+    return <Travel onTripSubmit={this.onTripSubmit} />;
   }
 
   render() {

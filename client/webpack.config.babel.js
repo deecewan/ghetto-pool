@@ -33,6 +33,7 @@ const config = {
           plugins: [
             "react-hot-loader/babel",
             "transform-object-rest-spread",
+            "lodash"
           ]
         }
       }]

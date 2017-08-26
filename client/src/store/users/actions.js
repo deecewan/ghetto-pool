@@ -25,7 +25,7 @@ export function addUserById(id) {
       return
     }
 
-    getBaseUserData(id)
+    return getBaseUserData(id)
       .then(user => getPhoto(user))
       .then(user => dispatch({
         type: '@USERS/ADD',

@@ -3,7 +3,7 @@ import { addUsers } from '../users/actions';
 
 export function getTrips() {
   return (dispatch) => {
-    axios.get('/trips')
+    return axios.get('/trips')
       .then(({ data: { trips }}) => {
         trips
           .map((trip) => {

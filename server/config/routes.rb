@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       get '/', to: 'travel#trips'
       get '/journeys', to: 'travel#journeys'
       post '/', to: 'travel#create'
-      put ':id/invite', to: 'travel#invite_friends'
+      put ':id/invite', to: 'travel#invite'
       post ':id/accept', to: 'travel#accept'
     end
 
