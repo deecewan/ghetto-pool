@@ -1,7 +1,7 @@
 class TravelController < ApplicationController
   before_action :authorize
 
-  def index
+  def trips
     trips = current_user.trips.joins(trip_passengers: :user).preload(:trip_passengers, trip_passengers: :user).uniq
     trips = trips.map do |t|
       {
@@ -20,23 +20,27 @@ class TravelController < ApplicationController
       }
     end
 
-    tps = TripPassenger.where(user_id: current_user.id).joins(trip: :user, trip: {trip_passengers: :user})
-      .preload(:trip, trip: :user, trip: {trip_passengers: :user})
+    render json: { trips: trips }
+  end
 
-    trips += tps.map(&:trip).map do |t|
+  def journeys
+    tps = TripPassenger.where(user_id: current_user.id).joins(trip: :user, trip: {trip_passengers: :user})
+              .preload(:trip, trip: :user, trip: {trip_passengers: :user})
+
+    trips = tps.map(&:trip).map do |t|
       {
-        id: t.id,
-        user_id: t.user.fb_id,
-        destination: t.destination,
-        depart_at: t.depart_at.to_i,
-        passengers: t.trip_passengers.map do |tp|
-          {
-            id: tp.user.fb_id,
-            first_name: tp.user.first_name,
-            last_name: tp.user.last_name,
-            accepted: tp.accepted,
-          }
-        end,
+          id: t.id,
+          user_id: t.user.fb_id,
+          destination: t.destination,
+          depart_at: t.depart_at.to_i,
+          passengers: t.trip_passengers.map do |tp|
+            {
+                id: tp.user.fb_id,
+                first_name: tp.user.first_name,
+                last_name: tp.user.last_name,
+                accepted: tp.accepted,
+            }
+          end,
       }
     end
 

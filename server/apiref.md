@@ -16,7 +16,7 @@ Req
 
 ## Trips
 
-### List trips you created or are part of
+### List trips you created
 
 GET `/api/trips`
 
@@ -29,12 +29,38 @@ Res
       "user_id": "123",
       "destination": "My House",
       "depart_at": 1503724220,
-      "passengers": [ // List includes all passengers including self (but excluding organiser)
+      "passengers": [
         {
           "id": "456",
           "first_name": "John",
           "last_name": "Smith",
           "accepted": false
+        }
+      ]
+    }
+  ]
+}
+```
+
+### List trips you are part of
+
+GET `/api/trips/journeys`
+
+Res
+```json
+{
+  "trips": [
+    {
+      "id": 1,
+      "user_id": "456",
+      "destination": "John's House",
+      "depart_at": 1503724220,
+      "passengers": [ // List contains all passengers including self
+        {
+          "id": "123",
+          "first_name": "Sally",
+          "last_name": "Buckets",
+          "accepted": true
         }
       ]
     }

@@ -3,7 +3,7 @@ import { addUsers } from '../users/actions'
 
 export function getJourneys() {
   return (dispatch, getState) => {
-    axios.get('/trips')
+    axios.get('/trips/journeys')
       .then(res => {
         const state = getState();
         const me = state.config.id;
