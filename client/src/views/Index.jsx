@@ -40,7 +40,7 @@ export class Index extends Component {
           size="tiny"
           style={{ marginBottom: 10 }}
         />}
-        Welcome Back, Name.
+        Welcome Back, {this.props.profileName}.
       </div>
     )
   }
@@ -127,11 +127,13 @@ const mapStateToProps = (state) => {
   const currUserId = state.config.id;
 
   let profileImage;
+  let profileName;
   if (currUserId && state.users[currUserId] && state.users[currUserId].photo) {
     profileImage = state.users[currUserId].photo;
+    profileName = state.users[currUserId].firstName + " " + state.users[currUserId].lastName;
   }
 
-  return { profileImage };
+  return { profileImage, profileName };
 };
 
 export default connect(mapStateToProps, { logOut })(Index);
