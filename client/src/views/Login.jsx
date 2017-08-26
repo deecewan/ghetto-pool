@@ -8,7 +8,7 @@ import { logIn } from '../store/config/actions';
 export class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = { loggedIn: null, loggingIn: false, error: null };
+    this.state = { loggingIn: false, error: null };
 
     this.onLoginClick = this.onLoginClick.bind(this);
     this.onLogin = this.onLogin.bind(this);
@@ -42,23 +42,18 @@ export class Login extends Component {
   }
 
   getLoginButton() {
-    if (this.state.loggedIn === null || this.state.loggingIn) {
-      return <Loader active inline size="large">{ this.state.loggingIn ? 'Logging In...' : 'Loading...'}</Loader>
-    }
-
-    if (this.state.loggedIn === false) {
+    if (this.props.loggedIn === false) {
       return (
-        <Button onClick={this.onLoginClick}>
+        <Button onClick={this.onLoginClick} color="facebook">
           <Icon.Group size='large'>
             <Icon name='facebook square' size="large" />
-            <Icon corner name='add' />
           </Icon.Group>
           Continue with Facebook
         </Button>
       );
     }
 
-    return <Button onClick={() => FB.logout(res => this.setState({ loggedIn: false }))}>Log Out</Button>
+    return <Loader active inline size="large">{ this.state.loggingIn ? 'Logging In...' : 'Loading...'}</Loader>
   }
 
   sendLogin(res) {
@@ -72,6 +67,7 @@ export class Login extends Component {
   }
 
   render() {
+    console.log(this.props, this.state);
     return (
       <div style={{
         display: 'flex',
@@ -88,4 +84,4 @@ export class Login extends Component {
   }
 }
 
-export default connect(state => ({ fbReady: state.config.fbReady }))(Login);
+export default connect(state => ({ fbReady: state.config.fbReady, loggedIn: state.config.loggedIn }))(Login);

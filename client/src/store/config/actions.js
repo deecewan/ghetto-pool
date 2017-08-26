@@ -5,9 +5,15 @@ export function markFBReady() {
   };
 }
 
-export function logIn(accessToken) {
+export function logIn(data) {
   return {
     type: '@CONFIG/LOGGED_IN',
-    payload: accessToken,
+    payload: data,
+  };
+}
+
+export function logOut() {
+  return {
+    type: '@CONFIG/LOGGED_OUT',
   };
 }
