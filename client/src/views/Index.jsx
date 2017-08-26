@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Header } from 'semantic-ui-react';
 import { logOut } from '../store/config/actions';
 import logger from '../util/logger';
+import bg from '../util/background';
 
 export class Index extends Component {
   constructor(props) {
@@ -14,6 +15,11 @@ export class Index extends Component {
 
   componentWillMount() {
     Notification && Notification.requestPermission(res => logger(`Notification Permission: ${res}.`));
+    bg.start();
+  }
+
+  componentWillUnmount() {
+    bg.stop();
   }
 
   getLogoutButton() {
