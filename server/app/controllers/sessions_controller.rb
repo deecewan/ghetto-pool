@@ -1,11 +1,11 @@
 class SessionsController < ApplicationController
   def login
-    p = params.permit(:accessToken, :expiresIn, :userID)
+    p = params.require(:data).permit(:accessToken, :expiresIn, :userID)
 
     graph = Koala::Facebook::API.new(p[:accessToken])
 
     begin
-      unless graph.get_object('me')['id'] == p[:userId]
+      unless graph.get_object('me')['id'] == p[:userID]
         auth_failure
         return
       end
