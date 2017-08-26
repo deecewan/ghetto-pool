@@ -1,5 +1,9 @@
 class User < ApplicationRecord
   has_many :location_histories
+  has_many :trip_passengers
+  has_many :journeys, through: :trip_passengers, source: :trip
+  has_many :trips
+  has_many :lifts
 
   def self.find_or_create_from_fb(access_token)
     long_lived_token = Koala::Facebook::OAuth.new.exchange_access_token_info(access_token)['access_token']
@@ -15,5 +19,13 @@ class User < ApplicationRecord
 
     user.save! if user.changed?
     user
+  end
+
+  def fb_client
+    @fb_client ||= Koala::Facebook::API.new(fb_token)
+  end
+
+  def fb_friend_ids
+    @fb_friend_ids ||= fb_client.get_connection('me', 'friends', fields: :id).map(&:values).flatten
   end
 end

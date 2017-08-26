@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170826011743) do
+ActiveRecord::Schema.define(version: 20170826031501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 20170826011743) do
 
   create_table "location_histories", force: :cascade do |t|
     t.bigint "user_id"
-    t.float "lat"
-    t.float "lng"
+    t.float "lat", null: false
+    t.float "lng", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index "ll_to_earth(lat, lng)", name: "location_histories_earthdistance_ix", using: :gist
@@ -28,13 +28,30 @@ ActiveRecord::Schema.define(version: 20170826011743) do
     t.index ["user_id"], name: "index_location_histories_on_user_id"
   end
 
+  create_table "trip_passengers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "trip_id", null: false
+    t.boolean "accepted", default: false, null: false
+    t.index ["trip_id"], name: "index_trip_passengers_on_trip_id"
+    t.index ["user_id"], name: "index_trip_passengers_on_user_id"
+  end
+
+  create_table "trips", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "destination", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_trips_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
-    t.string "fb_id"
-    t.string "fb_token"
+    t.string "fb_id", null: false
+    t.string "fb_token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["fb_id"], name: "index_users_on_fb_id"
   end
 
 end
