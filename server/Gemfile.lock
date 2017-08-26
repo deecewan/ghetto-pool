@@ -45,6 +45,7 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
+    awesome_print (1.8.0)
     builder (3.2.3)
     byebug (9.1.0)
     concurrent-ruby (1.0.5)
@@ -128,6 +129,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-postgres-earthdistance
+  awesome_print
   byebug
   dotenv-rails
   koala
