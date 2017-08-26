@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Grid, Button, Header, List, Image } from 'semantic-ui-react';
 import { logOut } from '../store/config/actions';
 import Travel from '../components/Travel';
+import TripList from "../components/TripList";
 import logger from '../util/logger';
 import bg from '../util/background';
 
@@ -73,10 +74,6 @@ export class Index extends Component {
     this.setState({ page: 'trips' });
   }
 
-  getTravellingList() {
-    return <Travel />;
-  }
-
   getLogoutButton() {
     return <Button onClick={this.onLogoutClick} icon="sign out" />
   }
@@ -119,10 +116,10 @@ export class Index extends Component {
 
   getPage() {
     if (this.state.page === 'trips') {
-      return "Here's yo trips";
+      return <TripList />;
     }
 
-    return this.getTravellingList()
+    return <Travel />;
   }
 
   render() {

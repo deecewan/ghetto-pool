@@ -2,7 +2,10 @@ class TravelController < ApplicationController
   before_action :authorize
 
   def trips
-    trips = current_user.trips.joins(trip_passengers: :user).preload(:trip_passengers, trip_passengers: :user).uniq
+    trips = current_user.trips
+                .joins('LEFT OUTER JOIN "trip_passengers" ON "trip_passengers"."trip_id" = "trips"."id"')
+                .joins('LEFT JOIN "users" ON "users"."id" = "trip_passengers"."user_id"')
+                .preload(:trip_passengers, trip_passengers: :user).uniq
     trips = trips.map do |t|
       {
         id: t.id,

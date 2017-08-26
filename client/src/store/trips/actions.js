@@ -1,4 +1,5 @@
-import { addUsers } from "../users/actions"
+import axios from 'axios';
+import { addUsers } from '../users/actions';
 
 export function getTrips() {
   return (dispatch) => {

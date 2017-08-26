@@ -1,6 +1,7 @@
 import axios from 'axios';
 import store from '../store';
 import { getJourneys } from '../store/journeys/actions';
+import { getTrips } from '../store/trips/actions';
 
 class Background {
 
@@ -18,6 +19,7 @@ class Background {
   doThings() {
     this.postLocation();
     store.dispatch(getJourneys());
+    store.dispatch(getTrips());
   }
 
   start() {

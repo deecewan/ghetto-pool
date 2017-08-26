@@ -70,6 +70,7 @@ export class Login extends Component {
       this.props.dispatch(logIn(access_token, user_id));
     })
       .catch(err => {
+        console.log(err)
         this.setState({
           loggingIn: false,
           loggedIn: false,
