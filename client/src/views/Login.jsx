@@ -40,7 +40,11 @@ export class Login extends Component {
 
   onLogin(res) {
     logger('onLogin res', res);
-    this.setState({ loggedIn: true });
+    axios.post('/login', {
+      data: res.authResponse,
+    }).then(tokenInfo => {
+      this.setState({ loggedIn: true });
+    });
   }
 
   getLoginButton() {

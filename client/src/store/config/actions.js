@@ -4,3 +4,10 @@ export function markFBReady() {
     type: '@CONFIG/FB_READY',
   };
 }
+
+export function logIn(credentials) {
+  return {
+    type: '@CONFIG/LOGGED_IN',
+    payload: credentials,
+  };
+}
