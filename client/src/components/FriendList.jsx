@@ -18,7 +18,7 @@ export default function FriendList({ friends, onFriendClick }) {
     return <p>No friends available to take this trip...</p>
   }
   return (
-    <div style={{ marginBottom: 60 }}>
+    <div style={{ marginBottom: 70 }}>
       {friends.map(friend => <Friend key={friend.id} onClick={onFriendClick} friend={friend} />)}
     </div>
   );

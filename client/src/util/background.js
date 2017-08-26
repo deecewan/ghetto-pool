@@ -6,6 +6,9 @@ import { getTrips } from '../store/trips/actions';
 class Background {
 
   postLocation() {
+    if (process.env.NODE_ENV === 'development') {
+      return;
+    }
     window.navigator.geolocation.getCurrentPosition(({ coords }) => {
       axios.post('/locations/current', {
         data: {

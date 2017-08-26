@@ -163,7 +163,8 @@ export class Travel extends Component {
         width: '100%',
         left: 0,
         backgroundColor: 'white',
-        padding: 5
+        padding: 5,
+        boxShadow: `0px -2px 10px -1px rgba(138,138,138,0.71)`,
       }}>
         <Button
           style={{ marginBottom: 10, width: '90%', marginLeft: '5%' }}
