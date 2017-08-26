@@ -133,7 +133,7 @@ const mapStateToProps = (state) => {
     profileName = state.users[currUserId].firstName + " " + state.users[currUserId].lastName;
   }
 
-  return { profileImage, profileName };
+  return { profileImage, profileName: state.users[currUserId].firstName };
 };
 
 export default connect(mapStateToProps, { logOut })(Index);
