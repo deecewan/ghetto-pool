@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-rsync -azv --delete --exclude server/log --exclude server/tmp . ubuntu@54.153.241.52:/home/ubuntu/ghetto-pool
