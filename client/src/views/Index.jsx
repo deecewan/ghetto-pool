@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'semantic-ui-react';
+import { Button, Header } from 'semantic-ui-react';
 import { logOut } from '../store/config/actions';
 import logger from '../util/logger';
 
@@ -32,6 +32,7 @@ export class Index extends Component {
   render() {
     return (
       <div>
+        <Header as="h1">Ghetto Pool Party</Header>
         {this.getLogoutButton()}
       </div>
     )

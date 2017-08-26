@@ -1,5 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { AppContainer } from 'react-hot-loader'
 import store from './store';
 import { markFBReady } from './store/config/actions';
 import Router from './Router';
@@ -18,7 +19,9 @@ window.fbAsyncInit = function() {
 export default function App({ name = "World" }) {
   return (
     <Provider store={store}>
-      <Router />
+      <AppContainer>
+        <Router />
+      </AppContainer>
     </Provider>
   );
 }
