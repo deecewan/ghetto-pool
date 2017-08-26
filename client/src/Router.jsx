@@ -4,7 +4,6 @@ import Index from './views/Index';
 import Login from './views/Login';
 
 export function Router(props) {
-  console.log(props.loggedIn);
   if (props.loggedIn) {
     return <Index />;
   }

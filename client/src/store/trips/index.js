@@ -1,7 +1,7 @@
 function marshallPassenger(passenger) {
   return {
+    id: passenger.id,
     accepted: passenger.accepted,
-    id: passenger.user_id,
   };
 }
 

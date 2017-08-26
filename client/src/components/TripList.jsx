@@ -13,7 +13,8 @@ export class TripList extends Component {
   }
 
   renderTripCard(trip) {
-    const passengers = compact(trip.passengers.map(p => this.props.users[p.id]));
+    const passengers = compact(trip.passengers.map(p => ({ ...p, ...this.props.users[p.id] })))
+      .sort((pa, pb) => pa.accepted ^ pb.accepted);
 
     let tripProps;
     if (trip.invitedBy) {
@@ -51,12 +52,9 @@ export class TripList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.trips)
   const trips = map(state.trips, (trip, id) => ({ id, ...trip }));
   const journeys = map(state.journeys, (journey, id) => ({ id, ...journey }));
   const allTrips = trips.concat(journeys).sort((a, b) => b.departAt - a.departAt);
-
-console.log(allTrips)
 
   return {
     trips: allTrips,
