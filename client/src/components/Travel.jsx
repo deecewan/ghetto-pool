@@ -30,6 +30,14 @@ export class Travel extends Component {
     this.setState({ transport: value });
   }
 
+  getSubmitButton() {
+    if (!this.state.destination || !this.state.time) {
+      return null;
+    }
+
+    return <Button>Submit</Button>;
+  }
+
   render() {
     return (
       <div>
@@ -42,12 +50,13 @@ export class Travel extends Component {
         />
         <Dropdown placeholder='When are you leaving?' fluid selection options={timeOptions} onChange={this.updateTime} />
         <Button.Group>
-          <Button icon="car" onClick={() => this.updateTransport('car')} value={10}/>
-          <Button icon="bus" onClick={() => this.updateTransport('bus')} />
-          <Button icon="military" onClick={() => this.updateTransport('plane')} />
-          <Button icon="ship" onClick={() => this.updateTransport('ship')} />
-          <Button icon="blind" onClick={() => this.updateTransport('walk')} />
+          <Button color={this.state.transport === 'car' ? 'blue' : null} icon="car" onClick={() => this.updateTransport('car')} value={10}/>
+          <Button color={this.state.transport === 'bus' ? 'blue' : null} icon="bus" onClick={() => this.updateTransport('bus')} />
+          <Button color={this.state.transport === 'plane' ? 'blue' : null} icon="military" onClick={() => this.updateTransport('plane')} />
+          <Button color={this.state.transport === 'ship' ? 'blue' : null} icon="ship" onClick={() => this.updateTransport('ship')} />
+          <Button color={this.state.transport === 'walk' ? 'blue' : null} icon="blind" onClick={() => this.updateTransport('walk')} />
         </Button.Group>
+        {this.getSubmitButton()}
       </div>
     );
   }
