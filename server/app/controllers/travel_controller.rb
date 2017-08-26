@@ -9,6 +9,7 @@ class TravelController < ApplicationController
         user_id: current_user.fb_id,
         destination: t.destination,
         depart_at: t.depart_at.to_i,
+        transport_method: t.transport_method,
         passengers: t.trip_passengers.map do |tp|
           {
             id: tp.user.fb_id,
@@ -33,6 +34,7 @@ class TravelController < ApplicationController
           user_id: t.user.fb_id,
           destination: t.destination,
           depart_at: t.depart_at.to_i,
+          transport_method: t.transport_method,
           passengers: t.trip_passengers.map do |tp|
             {
                 id: tp.user.fb_id,
@@ -63,7 +65,11 @@ class TravelController < ApplicationController
       return
     end
 
-    trip = current_user.trips.create!(destination: p[:destination], depart_at: Time.zone.at(p[:depart_at]))
+    trip = current_user.trips.create!(
+      destination: p[:destination],
+      depart_at: Time.zone.at(p[:depart_at]),
+      transport_method: p[:transport_method]
+    )
 
     render json: { trip_id: trip.id, inviteable_facebook_ids: invitable_fb_ids }
   end

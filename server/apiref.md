@@ -77,7 +77,8 @@ Req
 {
   "data": {
     "destination": "My House",
-    "depart_at": 1503724220 // Unix date time
+    "depart_at": 1503724220, // Unix date time
+    "transport_method": "car"
   }
 }
 ```
