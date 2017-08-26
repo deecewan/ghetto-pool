@@ -15,6 +15,7 @@ function addJourney(state, journey) {
       destination: journey.destination,
       departAt: journey.depart_at * 1000,
       accepted: journey.accepted,
+      transportMethod: journey.transport_method,
       passengers: journey.passengers.map(marshallPassenger),
     }
   }
