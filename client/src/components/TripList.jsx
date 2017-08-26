@@ -32,6 +32,7 @@ export class TripList extends Component {
         id={trip.id}
         departAt={trip.departAt}
         passengers={passengers}
+        destination={trip.destination}
         transportMethod={trip.transportMethod}
         open={trip.id === this.state.openTripId}
         onClick={this.tripClick}

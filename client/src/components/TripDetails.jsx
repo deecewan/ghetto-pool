@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Header, Image } from 'semantic-ui-react';
+import moment from 'moment';
 
 export class TripDetails extends Component {
   constructor(props) {
@@ -69,9 +70,9 @@ export class TripDetails extends Component {
           flexDirection: 'column',
           alignItems: 'center',
         }}
-        > Trip to LOCATION <br></br>
-          Leaving at {this.props.departAt} <br></br>
-          Hosted by {this.props.type === 'journey' ? this.printHostName() : "you"}
+        > Trip to: {this.props.destination} <br></br>
+          Leaving at: {moment(this.props.departAt).format('H:mm')}  <br></br>
+          Hosted by: {this.props.type === 'journey' ? this.printHostName() : "you"}
           <br></br>Transport: {this.props.transportMethod} <br></br>
           {/* Accepted: {this.props.passenger.map(p => p.accepted).join('. ')} */}
           {/* Pending: {this.props.passenger.map(p =>)}} */}
