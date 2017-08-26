@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import Index from './views/Index';
 import Login from './views/Login';
 
-export function Router({ loggedIn }) {
-  console.log(loggedIn);
-  if (loggedIn) {
+export function Router(props) {
+  console.log(props.loggedIn);
+  if (props.loggedIn) {
     return <Index />;
   }
   return <Login />;

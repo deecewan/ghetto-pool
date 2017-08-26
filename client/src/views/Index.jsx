@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Header, List } from 'semantic-ui-react';
+import { Button, Header, List, Image } from 'semantic-ui-react';
 import { logOut } from '../store/config/actions';
 import Travel from '../components/Travel';
 import logger from '../util/logger';
@@ -27,7 +27,7 @@ export class Index extends Component {
   }
 
   getTravelButton() {
-    return <Button onClick={this.onTravelClick}>Travel</Button>
+    return <Button content='Travel' icon='map outline' labelPosition='right' onClick={this.onTravelClick} />
   }
 
   onTravelClick() {
@@ -53,12 +53,20 @@ export class Index extends Component {
     this.props.logOut();
   }
 
-  render() {
+  render() {    
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Header as="h1">Ghetto Pool </Header>
-        {this.getLogoutButton()}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        flexDirection: 'column',
+        backgroundColor: '#212020',
+      }}>
+        <Image src='https://iwsmt-content-ok2nbdvvyp8jbrhdp.stackpathdns.com/July-27-2011-01-03-26-tumblr_ljoazy4Uk31qzpzfmo1_500.jpeg'/>
+        <Header as="h1" color='grey'>Ghetto Pool</Header>
         {this.getTravelButton()}
+        {this.getLogoutButton()}
         {this.state.travelling ? this.getTravellingList() : null}
       </div>
     )
