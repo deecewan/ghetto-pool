@@ -5,10 +5,10 @@ export function markFBReady() {
   };
 }
 
-export function logIn(data) {
+export function logIn(accessToken, id) {
   return {
     type: '@CONFIG/LOGGED_IN',
-    payload: data,
+    payload: { accessToken, id },
   };
 }
 

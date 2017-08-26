@@ -6,7 +6,8 @@ export default function reducer(state = initialState, { type, payload }) {
     case '@CONFIG/FB_READY':
       return { ...state, fbReady: true };
     case '@CONFIG/LOGGED_IN':
-      return { ...state, accessToken: payload, loggedIn: true };
+      // payload is { accessToken, id };
+      return { ...state, ...payload, loggedIn: true };
     case '@CONFIG/LOGGED_OUT':
       return { ...state, accessToken: null, loggedIn: false };
     default:

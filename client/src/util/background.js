@@ -1,4 +1,6 @@
 import axios from 'axios';
+import store from '../store';
+import { getJourneys } from '../store/journeys/actions';
 
 class Background {
 
@@ -15,11 +17,12 @@ class Background {
 
   doThings() {
     this.postLocation();
+    store.dispatch(getJourneys());
   }
 
   start() {
     this.doThings();
-    this.interval = setInterval(() => this.doThings(), 60000);
+    this.interval = setInterval(() => this.doThings(), 10000);
   }
 
   stop() {

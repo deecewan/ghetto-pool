@@ -65,9 +65,9 @@ export class Login extends Component {
   sendLogin(res) {
     axios.post('/login', {
       data: res.authResponse,
-    }).then(({ data: { accessToken } }) => {
+    }).then(({ data: { accessToken, user_id } }) => {
       this.setState({ loggedIn: true, loggingIn: false });
-      this.props.dispatch(logIn(accessToken));
+      this.props.dispatch(logIn(accessToken, user_id));
     })
     .catch(err => this.setState({ loggingIn: false, loggedIn: false, error: err.message }));
   }
