@@ -4,7 +4,7 @@ import { Divider, Header } from 'semantic-ui-react';
 import compact from 'lodash/compact';
 import map from 'lodash/map';
 import TripDetails from './TripDetails';
-import { filter, partition } from 'lodash/fp';
+import { filter, partition } from 'lodash';
 
 export class TripList extends Component {
   constructor(props) {
@@ -22,9 +22,9 @@ export class TripList extends Component {
   }
 
   renderTripCard(trip) {
-    const passengers = compact(filter(trip.passengers, p => p.id !== this.props.ownId)
-      .map(p => ({ ...p, ...this.props.users[p.id] })))
-      .sort((pa, pb) => pa.accepted ^ pb.accepted);
+    const passengers = trip.passengers
+      .map(p => ({ ...p, ...this.props.users[p.id] }))
+      .sort((pa, pb) => pa.accepted ? -1 : 1);
 
     let tripProps;
     if (trip.invitedBy) {
@@ -113,16 +113,19 @@ const mapStateToProps = (state) => {
   const trips = map(state.trips, (trip, id) => ({ id, ...trip }));
   const journeys = map(state.journeys, (journey, id) => ({ id, ...journey }));
   const allTrips = trips.concat(journeys).sort((a, b) => b.departAt - a.departAt);
-  const [pastTrips, futureTrips] = partition('inPast', allTrips.map(t => {
-    t.inPast = Date.now() > t.departAt
-    return t
+
+  const filteredTrips = allTrips.map(t => ({
+    ...t,
+    inPast: Date.now() > t.departAt,
+    passengers: filter(t.passengers, p => p.id !== state.config.id),
   }));
+
+  const [pastTrips, futureTrips] = partition(filteredTrips, 'inPast');
 
   return {
     pastTrips: pastTrips,
     futureTrips: futureTrips,
     users: state.users,
-    ownId: state.config.id,
   };
 };
 

@@ -94,12 +94,14 @@ export default class TripDetails extends Component {
       ? `${this.props.invitedBy.firstName}'s Trip`
       : 'Your Trip';
 
+    const numPassengers = Object.keys(this.props.passengers).length;
+
     return (
       <div style={{
         width: "100%",
         marginBottom: "1rem",
       }}>
-        <Card fluid link>
+        <Card fluid link={numPassengers > 0}>
           <Card.Content>
             {tripOwnerImager}
             <Card.Header>
@@ -111,7 +113,7 @@ export default class TripDetails extends Component {
             </Card.Meta>
             <Card.Meta>
               <div style={{ marginRight: "0" }}>
-                <strong>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{Object.keys(this.props.passengers).length}</strong> have accepted.
+                <strong>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
               </div>
             </Card.Meta>
           </Card.Content>
