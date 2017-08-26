@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
     user = User.find_or_create_from_fb(p[:accessToken])
 
     session[:user_id] = user.id
-    render(json: { accessToken: user.fb_token })
+    render(json: { access_token: user.fb_token, user_id: user.fb_id })
   end
 
   def logout
