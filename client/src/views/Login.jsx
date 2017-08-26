@@ -60,7 +60,7 @@ export class Login extends Component {
             <Icon.Group size='large'>
               <Icon name='facebook square' size="large" />
             </Icon.Group>
-            <span style={{ paddingRight: "1rem" }}>
+            <span style={{ paddingLeft: "1rem" }}>
               Continue with Facebook
             </span>
           </div>
