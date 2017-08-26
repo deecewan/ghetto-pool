@@ -19,7 +19,7 @@ export class Index extends Component {
   }
 
   componentWillMount() {
-    Notification && Notification.requestPermission(res => logger(`Notification Permission: ${res}.`));
+    window.Notification && window.Notification.requestPermission(res => logger(`Notification Permission: ${res}.`));
     bg.start();
   }
 

@@ -1,5 +1,5 @@
 export default function notify(title, body) {
-  Notification.requestPermission((res) => {
+  window.Notification && window.Notification.requestPermission((res) => {
     if (res === 'granted') {
       navigator.serviceWorker.ready.then(function(registration) {
         registration.showNotification(title, {
