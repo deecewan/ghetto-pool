@@ -5,9 +5,9 @@ export function markFBReady() {
   };
 }
 
-export function logIn(credentials) {
+export function logIn(accessToken) {
   return {
     type: '@CONFIG/LOGGED_IN',
-    payload: credentials,
+    payload: accessToken,
   };
 }
