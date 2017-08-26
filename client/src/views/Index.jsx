@@ -132,7 +132,6 @@ export class Index extends Component {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          height: '100vh',
           flexDirection: 'column',
         }}>
 
