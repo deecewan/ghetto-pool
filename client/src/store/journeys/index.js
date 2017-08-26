@@ -1,8 +1,9 @@
-function marshalPassenger(passenger) {
+function marshallPassenger(passenger) {
   return {
     id: passenger.id,
     firstName: passenger.first_name,
     lastName: passenger.last_name,
+    accepted: passenger.accepted,
   }
 }
 
@@ -14,7 +15,7 @@ function addJourney(state, journey) {
       destination: journey.destination,
       departAt: journey.depart_at * 1000,
       accepted: journey.accepted,
-      passengers: journey.passengers.map(marshalPassenger),
+      passengers: journey.passengers.map(marshallPassenger),
     }
   }
 }
