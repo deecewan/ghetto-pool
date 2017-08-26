@@ -17,6 +17,9 @@ const config = {
     extensions: ['.js', '.jsx', '.json'],
   },
   devtool: 'inline-sourcemap',
+  devServer: {
+    contentBase: join(__dirname, 'out'),
+  },
   module: {
     rules: [{
       test: /\.jsx?$/,

@@ -7,7 +7,9 @@
   "license": "MIT",
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "dev": "NODE_ENV=development webpack-dev-server"
+    "build:worker": "webpack --config webpack.worker.config.babel.js",
+    "dev": "NODE_ENV=development webpack-dev-server",
+    "watch:worker": "yarn build:worker -- --watch"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

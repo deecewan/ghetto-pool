@@ -33,7 +33,7 @@ export class Login extends Component {
 
   onLoginClick() {
     this.setState({ loggingIn: true, error: null });
-    FB.login(this.onLogin, { scope: 'public_profile,user_friends' })
+    FB.login(this.onLogin, { scope: 'public_profile,user_friends' });
   }
 
   onLogin(res) {
@@ -42,6 +42,12 @@ export class Login extends Component {
   }
 
   getLoginButton() {
+    if (!this.props.fbReady) {
+      return <Loader active inline size="large">Loading...</Loader>
+    }
+    if (this.state.loggingIn) {
+      return <Loader active inline size="large">Logging In...</Loader>
+    }
     if (this.props.loggedIn === false) {
       return (
         <Button onClick={this.onLoginClick} color="facebook">
@@ -53,7 +59,7 @@ export class Login extends Component {
       );
     }
 
-    return <Loader active inline size="large">{ this.state.loggingIn ? 'Logging In...' : 'Loading...'}</Loader>
+    return
   }
 
   sendLogin(res) {

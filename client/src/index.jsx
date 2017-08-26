@@ -1,4 +1,5 @@
 import './util/axios';
+import './util/sw-register';
 import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
