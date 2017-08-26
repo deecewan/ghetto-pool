@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Header, List } from 'semantic-ui-react';
 import { logOut } from '../store/config/actions';
+import Travel from '../components/Travel';
 import logger from '../util/logger';
 import bg from '../util/background';
 
@@ -9,7 +10,7 @@ export class Index extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { travelling: false };
+    this.state = { travelling: false, passengers: [] };
 
     this.onLogout = this.onLogout.bind(this);
     this.onLogoutClick = this.onLogoutClick.bind(this);
@@ -34,8 +35,9 @@ export class Index extends Component {
   }
 
   getTravellingList() {
-    const friendsList = ['Apples', 'Bananas']; // TODO: Replace with actual friends in range
-    return <List items={friendsList} />
+    return <Travel />;
+    // const friendsList = ['Apples', 'Bananas']; // TODO: Replace with actual friends in range
+    // return <List items={friendsList} />
   }
 
   getLogoutButton() {
