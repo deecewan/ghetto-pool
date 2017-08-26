@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Header, Button, Loader } from 'semantic-ui-react';
+import axios from 'axios';
+import logger from '../util/logger';
 
 export class Login extends Component {
   constructor(props) {
@@ -13,8 +15,13 @@ export class Login extends Component {
 
   checkLoggedIn() {
     FB.getLoginStatus((res) => {
+      logger('getLoginStatus res', res);
       if (res.status === 'connected') {
-        this.setState({ loggedIn: true });
+        axios.post('/login', {
+          data: res.authResponse,
+        }).then(tokenInfo => {
+          this.setState({ loggedIn: true });
+        });
       } else {
         this.setState({ loggedIn: false });
       }
@@ -32,7 +39,7 @@ export class Login extends Component {
   }
 
   onLogin(res) {
-    console.log(res);
+    logger('onLogin res', res);
     this.setState({ loggedIn: true });
   }
 
@@ -49,7 +56,6 @@ export class Login extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div style={{
         display: 'flex',
