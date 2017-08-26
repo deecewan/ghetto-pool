@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       post :current, to: 'locations#current'
     end
 
-    scope :trip do
+    scope :trips do
       post '/', to: 'travel#create'
       put ':id/invite', to: 'travel#invite_friends'
       post ':id/accept', to: 'travel#accept'

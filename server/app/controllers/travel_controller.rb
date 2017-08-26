@@ -23,7 +23,7 @@ class TravelController < ApplicationController
 
   def invite_friends
     trip = current_user.trips.find_by(id: params[:id])
-    fb_ids = current_user.fb_friend_ids & params.require(:data).fetch(:invited_facebook_id, [])
+    fb_ids = current_user.fb_friend_ids & params.require(:data).fetch(:invited_facebook_ids, [])
     trip.passengers = User.find_by(fb_id: fb_ids)
     head :ok
   end
