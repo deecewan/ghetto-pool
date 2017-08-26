@@ -48,7 +48,7 @@ export class Index extends Component {
   getTravelButton() {
     return (
       <div style={{ padding: 40 }}>
-        <Button content='Travel' icon='map outline' labelPosition='right' onClick={this.onTravelClick} />
+        <Button color={this.state.travelling ? 'grey' : null} content='Travel' icon='map outline' labelPosition='right' onClick={this.onTravelClick} />
       </div>
     );
   }

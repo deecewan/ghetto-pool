@@ -56,13 +56,13 @@ export class Travel extends Component {
       return null;
     }
 
-    return <Button onClick={this.submitNewTrip}>Submit</Button>;
+    return <Button style={this.getStyleThingo()} onClick={this.submitNewTrip}>Submit</Button>;
   }
 
   renderTransportButton(transportType, icon) {
     return (
       <Button
-        color={this.state.transport === transportType ? 'blue' : null}
+        color={this.state.transport === transportType ? 'grey' : null}
         icon={icon}
         onClick={() => this.updateTransport(transportType)}
       />
@@ -77,22 +77,27 @@ export class Travel extends Component {
     )
   }
 
+  getStyleThingo() {
+    return { marginTop: 3, marginBottom: 3 };
+  }
+
   renderFriendSelection() {
     return <div>WHO ARE YOUR FRIENDS???</div>
   }
 
   renderNewTrip() {
     return (
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <Input
           icon='location arrow'
           iconPosition='left'
           placeholder='Destination'
           value={this.state.destination}
           onChange={this.updateDestination}
+          style={this.getStyleThingo()}
         />
-        <Dropdown placeholder='When are you leaving?' fluid selection options={timeOptions} onChange={this.updateTime} />
-        <Button.Group>
+        <Dropdown style={this.getStyleThingo()} placeholder='When are you leaving?' fluid selection options={timeOptions} onChange={this.updateTime} />
+        <Button.Group style={this.getStyleThingo()} >
           {this.renderTransportButton('car', 'car')}
           {this.renderTransportButton('bus', 'bus')}
           {this.renderTransportButton('plane', 'military')}
