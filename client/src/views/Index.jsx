@@ -10,11 +10,12 @@ export class Index extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { travelling: false, passengers: [] };
+    this.state = { page: 'trips', passengers: [] };
 
     this.onLogout = this.onLogout.bind(this);
     this.onLogoutClick = this.onLogoutClick.bind(this);
-    this.onTravelClick = this.onTravelClick.bind(this);
+    this.onNewClick = this.onNewClick.bind(this);
+    this.onTripsClick = this.onTripsClick.bind(this);
   }
 
   componentWillMount() {
@@ -48,13 +49,28 @@ export class Index extends Component {
   getTravelButton() {
     return (
       <div style={{ padding: 40 }}>
-        <Button color={this.state.travelling ? 'grey' : null} content='Travel' icon='map outline' labelPosition='right' onClick={this.onTravelClick} />
+        <Button.Group>
+          <Button
+            color={this.state.page === 'trips' ? 'grey' : null}
+            content='Trips'
+            onClick={this.onTripsClick}
+          />
+          <Button
+            color={this.state.page === 'new' ? 'grey' : null}
+            content='New Trip'
+            onClick={this.onNewClick}
+          />
+        </Button.Group>
       </div>
     );
   }
 
-  onTravelClick() {
-    this.setState({ travelling: !this.state.travelling })
+  onNewClick() {
+    this.setState({ page: 'new' });
+  }
+
+  onTripsClick() {
+    this.setState({ page: 'trips' });
   }
 
   getTravellingList() {
@@ -101,6 +117,14 @@ export class Index extends Component {
     this.props.logOut();
   }
 
+  getPage() {
+    if (this.state.page === 'trips') {
+      return "Here's yo trips";
+    }
+
+    return this.getTravellingList()
+  }
+
   render() {
     return (
       <div>
@@ -115,7 +139,7 @@ export class Index extends Component {
           {this.getProfile()}
           {this.getTravelButton()}
 
-          {this.state.travelling ? this.getTravellingList() : null}
+          {this.getPage()}
         </div>
       </div>
 
@@ -130,10 +154,10 @@ const mapStateToProps = (state) => {
   let profileName;
   if (currUserId && state.users[currUserId] && state.users[currUserId].photo) {
     profileImage = state.users[currUserId].photo;
-    profileName = state.users[currUserId].firstName + " " + state.users[currUserId].lastName;
+    profileName = state.users[currUserId].firstName;
   }
 
-  return { profileImage, profileName: state.users[currUserId].firstName };
+  return { profileImage, profileName };
 };
 
 export default connect(mapStateToProps, { logOut })(Index);
