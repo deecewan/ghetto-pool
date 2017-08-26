@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Header } from 'semantic-ui-react';
+import { Button, Header, List } from 'semantic-ui-react';
 import { logOut } from '../store/config/actions';
 import logger from '../util/logger';
 import bg from '../util/background';
@@ -9,8 +9,11 @@ export class Index extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { travelling: false };
+
     this.onLogout = this.onLogout.bind(this);
     this.onLogoutClick = this.onLogoutClick.bind(this);
+    this.onTravelClick = this.onTravelClick.bind(this);
   }
 
   componentWillMount() {
@@ -20,6 +23,19 @@ export class Index extends Component {
 
   componentWillUnmount() {
     bg.stop();
+  }
+
+  getTravelButton() {
+    return <Button onClick={this.onTravelClick}>Travel</Button>
+  }
+
+  onTravelClick() {
+    this.setState({travelling: true})
+  }
+
+  getTravellingList() {
+    const friendsList = ['Apples', 'Bananas']; // TODO: Replace with actual friends in range
+    return <List items={friendsList} />
   }
 
   getLogoutButton() {
@@ -38,8 +54,10 @@ export class Index extends Component {
   render() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Header as="h1">Ghetto Pool Party</Header>
+        <Header as="h1">Ghetto Pool </Header>
         {this.getLogoutButton()}
+        {this.getTravelButton()}
+        {this.state.travelling ? this.getTravellingList() : null}
       </div>
     )
   }
