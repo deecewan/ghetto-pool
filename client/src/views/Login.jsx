@@ -114,7 +114,7 @@ export class Login extends Component {
           display: 'flex',
           justifyContent: 'space-around',
           alignItems: 'center',
-          maxHeight: '20rem',
+          maxHeight: '55rem',
           height: '100%',
           flexDirection: 'column',
         }}>
