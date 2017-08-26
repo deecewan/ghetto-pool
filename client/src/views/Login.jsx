@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Header, Button, Loader } from 'semantic-ui-react';
+import { Header, Button, Loader, Icon } from 'semantic-ui-react';
 import axios from 'axios';
 import logger from '../util/logger';
 
@@ -46,7 +46,15 @@ export class Login extends Component {
     }
 
     if (this.state.loggedIn === false) {
-      return <Button onClick={this.onLoginClick}>Continue with Facebook</Button>
+      return (
+        <Button onClick={this.onLoginClick}>
+          <Icon.Group size='large'>
+            <Icon name='facebook square' size="large" />
+            <Icon corner name='add' />
+          </Icon.Group>
+          Continue with Facebook
+        </Button>
+      );
     }
 
     return <Button onClick={() => FB.logout(res => this.setState({ loggedIn: false }))}>Log Out</Button>
