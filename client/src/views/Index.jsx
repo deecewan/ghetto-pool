@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { logOut } from '../store/config/actions';
+import logger from '../util/logger';
 
 export class Index extends Component {
   constructor(props) {
@@ -9,6 +10,10 @@ export class Index extends Component {
 
     this.onLogout = this.onLogout.bind(this);
     this.onLogoutClick = this.onLogoutClick.bind(this);
+  }
+
+  componentWillMount() {
+    Notification && Notification.requestPermission(res => logger(`Notification Permission: ${res}.`));
   }
 
   getLogoutButton() {
