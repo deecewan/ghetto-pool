@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { addUsers } from '../users/actions'
+import { addUserById, addUsers } from '../users/actions'
 
 export function getJourneys() {
   return (dispatch, getState) => {
@@ -10,10 +10,10 @@ export function getJourneys() {
         res.data.trips
           .filter(trip => trip.user_id !== me)
           .map((trip) => {
-            dispatch(addUsers(trip.passengers))
-            return trip
-          })
-          .map(trip => dispatch(addJourney(trip)));
+            dispatch(addUserById(trip.user_id));
+            dispatch(addUsers(trip.passengers));
+            return dispatch(addJourney(trip));
+          });
       });
   };
 }

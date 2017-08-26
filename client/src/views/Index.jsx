@@ -25,6 +25,14 @@ export class Index extends Component {
     bg.stop();
   }
 
+  getProfileImage() {
+    if (!this.props.profileImage) {
+      return null
+    }
+
+    return <img src={this.props.profileImage} />
+  }
+
   getTravelButton() {
     return <Button onClick={this.onTravelClick}>Travel</Button>
   }
@@ -55,6 +63,7 @@ export class Index extends Component {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Header as="h1">Ghetto Pool </Header>
+        {this.getProfileImage()}
         {this.getLogoutButton()}
         {this.getTravelButton()}
         {this.state.travelling ? this.getTravellingList() : null}
@@ -63,4 +72,15 @@ export class Index extends Component {
   }
 }
 
-export default connect(() => ({}), { logOut })(Index)
+const mapStateToProps = (state) => {
+  const currUserId = state.config.id;
+
+  let profileImage;
+  if (currUserId && state.users[currUserId] && state.users[currUserId].photo) {
+    profileImage = state.users[currUserId].photo;
+  }
+
+  return { profileImage };
+};
+
+export default connect(mapStateToProps, { logOut })(Index);

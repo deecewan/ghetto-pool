@@ -6,7 +6,8 @@ Rails.application.routes.draw do
     end
 
     scope :trips do
-      get '/', to: 'travel#index'
+      get '/', to: 'travel#trips'
+      get '/journeys', to: 'travel#journeys'
       post '/', to: 'travel#create'
       put ':id/invite', to: 'travel#invite_friends'
       post ':id/accept', to: 'travel#accept'
