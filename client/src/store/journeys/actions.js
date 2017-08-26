@@ -7,7 +7,9 @@ export function getJourneys() {
       .then(res => {
         const state = getState();
         const me = state.config.id;
+        const trips = Object.keys(state.trips);
         res.data.trips
+          .filter(trip => !trips.includes(trip.id.toString()))
           .filter(trip => trip.user_id !== me)
           .map((trip) => {
             dispatch(addUserById(trip.user_id));

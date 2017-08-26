@@ -37,8 +37,10 @@ export function addUserById(id) {
 export function addUsers(users) {
   return (dispatch, getState) => {
     const userState = getState().users
+    const existing = Object.keys(userState);
 
     const ps = users
+      .filter(u => !existing.includes(u.id.toString()))
       .filter(u => !(userState[u.id] && userState[u.id].photo))
       .map(u => getPhoto(u));
 
