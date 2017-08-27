@@ -171,7 +171,6 @@ export class TripDetails extends Component {
 
     const numPassengers = Object.keys(this.props.passengers).length;
 
-    console.log(this.props);
     return (
       <div style={{
         width: "100%",
