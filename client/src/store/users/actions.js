@@ -48,9 +48,9 @@ export function addUsers(users) {
       payload: newUsers.map(u => ({ ...u, fetchingPhoto: true })),
     });
 
-    return Promise.all(newUsers.map(u => getPhoto(u)))
-      .then(urls => urls.map(
-        url => dispatch({
+    return Promise.all(newUsers.map(u => getPhoto(u).then(url => [u.id, url])))
+      .then(things => things.map(
+        [id, url] => dispatch({
           type: '@USERS/UPDATE',
           payload: { id: id, newState: { photo: url } }
         })
