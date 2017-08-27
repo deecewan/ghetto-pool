@@ -12,6 +12,11 @@ export class TripList extends Component {
     this.state = {openTripId: null}
 
     this.tripClick = e => {
+      const trip = this.props.pastTrips.find(t => t.id === e.target.value) || this.props.futureTrips.find(t => t.id === e.target.value);
+      if (trip && trip.passengers.length < 1) {
+        return null;
+      }
+
       if (this.state.openTripId === e.target.value) {
         this.setState({openTripId: null});
       } else {

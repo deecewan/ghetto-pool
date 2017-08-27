@@ -159,7 +159,7 @@ export class TripDetails extends Component {
         </div>
       );
     }
-    const tripOwnerImager = this.props.invitedBy
+    const tripOwnerImage = this.props.invitedBy
       ? <Image floated='right' shape="rounded" size='mini' src={this.props.invitedBy.photo} />
       : null;
 
@@ -179,7 +179,11 @@ export class TripDetails extends Component {
       }}>
         <Card fluid link={numPassengers > 0}>
           <Card.Content>
-            {tripOwnerImager}
+            <div style={{
+              marginLeft: "-35px",
+            }}>
+              {tripOwnerImage}
+            </div>
             <Card.Header>
               {tripOwnerName}
               <Icon style={{ marginLeft: 5 }} name={transportToIcon[this.props.transportMethod]}/>
@@ -193,7 +197,7 @@ export class TripDetails extends Component {
                 <div>
                   <strong style={{ marginRight: "0" }}>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
                 </div>
-                {(this.state.accepted || !canAccept) ? <div><Icon name="check" color="green" /></div> : null }
+                {(this.state.accepted || !canAccept) ? <div style={{ paddingRight: (this.props.open ? "1.25rem" : "0") }}><Icon name="check" color="green" /></div> : null }
               </div>
             </Card.Meta>
             { this.getAcceptButton(canAccept) }
