@@ -22,7 +22,7 @@ export function addUserById(id) {
     const userState = getState().users
 
     if (userState[id] && userState[id].photo) {
-      return
+      return Promise.resolve();
     }
 
     return getBaseUserData(id)

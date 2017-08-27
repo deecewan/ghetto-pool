@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Card, Comment, Header, Image, Icon } from 'semantic-ui-react';
+import { Button, Card, Comment, Header, Image, Icon, Loader } from 'semantic-ui-react';
 import TimeAgo from 'react-timeago';
 import { filter } from 'lodash';
+import axios from 'axios';
+import { addUserById } from '../store/users/actions';
 
-export default class TripDetails extends Component {
+export class TripDetails extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { recentlyAccepted: false, accepted: props.accepted, accepting: false, loadInvitingUser: typeof props.invitedBy === 'string' };
+
+    this.onAcceptTrip = this.onAcceptTrip.bind(this);
+  }
+
   renderPassengerInformation() {
     if (!this.props.open) {
       return null
@@ -22,6 +31,14 @@ export default class TripDetails extends Component {
         </div>
       </Card.Content>
     )
+  }
+
+  componentDidMount() {
+    if (this.state.loadInvitingUser) {
+      // load the person
+      this.props.addUserById(this.props.invitedBy)
+        .then(() => this.setState({ loadInvitingUser: false }))
+    }
   }
 
   renderPassengerIcon(passenger) {
@@ -85,10 +102,60 @@ export default class TripDetails extends Component {
     )
   }
 
+  onAcceptTrip(e) {
+    e.stopPropagation();
+    if (this.state.accepting) {
+      return;
+    }
+    this.setState({ accepting: true });
+    // do request here
+    axios.post(`/trips/${this.props.id}/accept`)
+      .then(() => this.setState({ accepting: false, recentlyAccepted: true }))
+      .then(() => setTimeout(() => this.setState({ recentlyAccepted: false, accepted: true }), 500))
+  }
+
+  getAcceptButton(canAccept) {
+    if (!canAccept || this.state.accepted || this.props.inPast) {
+      return null;
+    }
+
+    return (
+      <Card.Meta>
+        <div style={{ marginTop: 10 }}>
+          <Button
+            basic={!this.state.recentlyAccepted}
+            color="green"
+            onClick={this.onAcceptTrip}
+            loading={this.state.accepting}
+            style={{ width: '100%' }}
+          >
+            Accept
+          </Button>
+        </div>
+      </Card.Meta>
+    )
+  }
+
   getTripDetails() {
+    if (this.state.loadInvitingUser) {
+      return (
+        <div style={{
+          width: "100%",
+          marginBottom: "1rem",
+        }}>
+          <Card fluid link style={{ padding: '1rem' }}>
+            <Card.Content>
+              <Loader active />
+            </Card.Content>
+          </Card>
+        </div>
+      );
+    }
     const tripOwnerImager = this.props.invitedBy
       ? <Image floated='right' shape="rounded" size='mini' src={this.props.invitedBy.photo} />
       : null;
+
+    const canAccept = this.props.type === 'journey';
 
     const tripOwnerName = this.props.type === 'journey'
       ? `${this.props.invitedBy.firstName}'s Trip`
@@ -112,10 +179,14 @@ export default class TripDetails extends Component {
               <TimeAgo date={this.props.departAt} />
             </Card.Meta>
             <Card.Meta>
-              <div>
-                <strong style={{ marginRight: "0" }}>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                  <strong style={{ marginRight: "0" }}>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
+                </div>
+                {(this.state.accepted || !canAccept) ? <div><Icon name="check" color="green" /></div> : null }
               </div>
             </Card.Meta>
+            { this.getAcceptButton(canAccept) }
           </Card.Content>
           {this.renderPassengerInformation()}
         </Card>
@@ -125,7 +196,7 @@ export default class TripDetails extends Component {
 
   render() {
     return (
-      <div 
+      <div
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -141,3 +212,5 @@ export default class TripDetails extends Component {
     )
   }
 }
+
+export default connect(() => ({}), { addUserById })(TripDetails);

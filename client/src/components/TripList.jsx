@@ -117,7 +117,7 @@ const mapStateToProps = (state) => {
     return {
       ...t,
       inPast: Date.now() > t.departAt,
-      invitedBy: t.invitedBy ? state.users[t.invitedBy] : null,
+      invitedBy: state.users[t.invitedBy] || t.invitedBy,
       passengers: passengers,
     }
   }
