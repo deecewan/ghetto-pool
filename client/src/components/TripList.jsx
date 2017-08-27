@@ -126,7 +126,7 @@ const mapStateToProps = (state) => {
       ...t,
       inPast: Date.now() > t.departAt,
       invitedBy: state.users[t.invitedBy] || t.invitedBy,
-      userId: t.invitedBy || state.config.userId,
+      userId: t.invitedBy || state.config.id,
       passengers: passengers,
     }
   }
