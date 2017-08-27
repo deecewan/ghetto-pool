@@ -112,8 +112,8 @@ export default class TripDetails extends Component {
               <TimeAgo date={this.props.departAt} />
             </Card.Meta>
             <Card.Meta>
-              <div style={{ marginRight: "0" }}>
-                <strong>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
+              <div>
+                <strong style={{ marginRight: "0" }}>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
               </div>
             </Card.Meta>
           </Card.Content>
