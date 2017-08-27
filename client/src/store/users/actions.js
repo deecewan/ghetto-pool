@@ -48,6 +48,12 @@ export function addUsers(users) {
       payload: newUsers.map(u => ({ ...u, fetchingPhoto: true })),
     });
 
-    return Promise.all(newUsers.map(u => getPhoto(u)));
+    return Promise.all(newUsers.map(u => getPhoto(u)))
+      .then(urls => urls.map(
+        url => dispatch({
+          type: '@USERS/UPDATE',
+          payload: { id: id, newState: { photo: url } }
+        })
+      ));
   }
 }
