@@ -1,4 +1,6 @@
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const url = require('url');
 const qs = require('querystring');
 const scrape = require('./scrape');
@@ -10,7 +12,13 @@ const urlMaker = postcodes => num => `https://services.realestate.com.au/service
 const server = http.createServer((req, res) => {
   const parsed = qs.parse(url.parse(req.url).query);
   if (!parsed.postcodes) {
-    return res.end("Invalid Query");
+    return fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, file) => {
+      if (err) {
+        return console.error(err);
+      }
+
+      return res.end(file);
+    })
   }
   res.setHeader('Content-Type', 'application/json');
   const postcodes = parsed.postcodes.split(',')
