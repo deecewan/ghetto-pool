@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Divider, Header } from 'semantic-ui-react';
-import compact from 'lodash/compact';
 import map from 'lodash/map';
 import TripDetails from './TripDetails';
 import { filter, partition } from 'lodash';
@@ -22,14 +21,10 @@ export class TripList extends Component {
   }
 
   renderTripCard(trip) {
-    const passengers = trip.passengers
-      .map(p => ({ ...p, ...this.props.users[p.id] }))
-      .sort((pa, pb) => pa.accepted ? -1 : 1);
-
     let tripProps;
     if (trip.invitedBy) {
       tripProps = {
-        invitedBy: this.props.users[trip.invitedBy],
+        invitedBy: trip.invitedBy,
         accepted: trip.accepted,
         type: 'journey',
       };
@@ -42,7 +37,7 @@ export class TripList extends Component {
         key={trip.id}
         id={trip.id}
         departAt={trip.departAt}
-        passengers={passengers}
+        passengers={trip.passengers}
         destination={trip.destination}
         transportMethod={trip.transportMethod}
         inPast={trip.inPast}
@@ -114,18 +109,25 @@ const mapStateToProps = (state) => {
   const journeys = map(state.journeys, (journey, id) => ({ id, ...journey }));
   const allTrips = trips.concat(journeys).sort((a, b) => b.departAt - a.departAt);
 
-  const filteredTrips = allTrips.map(t => ({
-    ...t,
-    inPast: Date.now() > t.departAt,
-    passengers: filter(t.passengers, p => p.id !== state.config.id),
-  }));
+  const filteredTrips = allTrips.map(t => {
+    const passengers = filter(t.passengers, p => p.id !== state.config.id)
+      .map(p => ({ ...p, ...state.users[p.id] }))
+      .sort((pa, pb) => pa.accepted ? -1 : 1);
+
+    return {
+      ...t,
+      inPast: Date.now() > t.departAt,
+      invitedBy: t.invitedBy ? state.users[t.invitedBy] : null,
+      passengers: passengers,
+    }
+  }
+  );
 
   const [pastTrips, futureTrips] = partition(filteredTrips, 'inPast');
 
   return {
     pastTrips: pastTrips,
     futureTrips: futureTrips,
-    users: state.users,
   };
 };
 
