@@ -6,6 +6,14 @@ import { filter } from 'lodash';
 import axios from 'axios';
 import { addUserById } from '../store/users/actions';
 
+const transportToIcon = {
+  car: 'car',
+  walk: 'blind',
+  ship: 'ship',
+  plane: 'military',
+  bus: 'bus',
+}
+
 export class TripDetails extends Component {
   constructor(props) {
     super(props);
@@ -163,6 +171,7 @@ export class TripDetails extends Component {
 
     const numPassengers = Object.keys(this.props.passengers).length;
 
+    console.log(this.props);
     return (
       <div style={{
         width: "100%",
@@ -173,6 +182,7 @@ export class TripDetails extends Component {
             {tripOwnerImager}
             <Card.Header>
               {tripOwnerName}
+              <Icon style={{ marginLeft: 5 }} name={transportToIcon[this.props.transportMethod]}/>
             </Card.Header>
             <Card.Meta>
               <span>{`${this.props.inPast ? 'Left for' : 'Leaving for'} ${this.props.destination}${this.props.inPast ? '' : ' in'}`}</span>

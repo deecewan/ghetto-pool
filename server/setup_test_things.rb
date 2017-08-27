@@ -17,3 +17,13 @@ first_friend = friends.shift
 ap first_friend
 
 friends.map{|f| test_users.befriend(first_friend, f)}
+
+j = Trip.build
+j.user = User.second
+j.assign_attributes(
+  destination: "Florida",
+  depart_at: 1.5.hours.from_now,
+  transport_method: "car"
+)
+j.passengers = User.where.not(id: User.second.id)
+j.save
