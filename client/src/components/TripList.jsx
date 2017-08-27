@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Divider, Header } from 'semantic-ui-react';
 import map from 'lodash/map';
 import TripDetails from './TripDetails';
-import { filter, partition } from 'lodash';
+import { filter, partition, isObject } from 'lodash';
 
 export class TripList extends Component {
   constructor(props) {
@@ -30,11 +30,15 @@ export class TripList extends Component {
     if (trip.invitedBy) {
       tripProps = {
         invitedBy: trip.invitedBy,
+        userId: isObject(trip.invitedBy) ? trip.invitedBy.id : trip.invitedBy,
         accepted: trip.accepted,
         type: 'journey',
       };
     } else {
-      tripProps = { type: 'trip' };
+      tripProps = {
+        type: 'trip',
+        userId: this.props.ownId,
+      };
     }
 
     return (
@@ -133,6 +137,7 @@ const mapStateToProps = (state) => {
   return {
     pastTrips: pastTrips,
     futureTrips: futureTrips,
+    ownId: state.config.id,
   };
 };
 
