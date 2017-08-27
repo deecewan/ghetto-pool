@@ -30,14 +30,12 @@ export class TripList extends Component {
     if (trip.invitedBy) {
       tripProps = {
         invitedBy: trip.invitedBy,
-        userId: isObject(trip.invitedBy) ? trip.invitedBy.id : trip.invitedBy,
         accepted: trip.accepted,
         type: 'journey',
       };
     } else {
       tripProps = {
         type: 'trip',
-        userId: this.props.ownId,
       };
     }
 
@@ -52,6 +50,7 @@ export class TripList extends Component {
         inPast={trip.inPast}
         open={trip.id === this.state.openTripId}
         onClick={this.tripClick}
+        userId={trip.userId}
         {...tripProps}
       />
     );
@@ -127,6 +126,7 @@ const mapStateToProps = (state) => {
       ...t,
       inPast: Date.now() > t.departAt,
       invitedBy: state.users[t.invitedBy] || t.invitedBy,
+      userId: t.invitedBy || state.config.userId,
       passengers: passengers,
     }
   }
@@ -137,7 +137,6 @@ const mapStateToProps = (state) => {
   return {
     pastTrips: pastTrips,
     futureTrips: futureTrips,
-    ownId: state.config.id,
   };
 };
 

@@ -159,7 +159,7 @@ export class TripDetails extends Component {
     return (
       <Modal trigger={<Button>Open Map</Button>} basic>
         <Modal.Content>
-          <TripMap fbUserIds={map(this.props.passengers, 'id').concat([this.props.userId])} />
+          <TripMap centerId={this.props.userId} fbUserIds={map(this.props.passengers, 'id').concat([this.props.userId])} />
         </Modal.Content>
       </Modal>
     )
