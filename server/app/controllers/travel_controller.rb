@@ -38,6 +38,7 @@ class TravelController < ApplicationController
           destination: t.destination,
           depart_at: t.depart_at.to_i,
           transport_method: t.transport_method,
+          accepted: t.trip_passengers.to_a.find{|tp| tp.user_id == current_user.id}&.accepted,
           passengers: t.trip_passengers.map do |tp|
             {
                 id: tp.user.fb_id,
@@ -85,7 +86,7 @@ class TravelController < ApplicationController
   end
 
   def accept
-    tp = current_user.trip_passengers.where(trip_id: params[:id])
+    tp = current_user.trip_passengers.find_by(trip_id: params[:id])
     tp.update_attributes(accepted: true)
     head :ok
   end

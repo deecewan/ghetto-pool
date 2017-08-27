@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import compact from 'lodash/compact';
+import { Divider, Header } from 'semantic-ui-react';
 import map from 'lodash/map';
 import TripDetails from './TripDetails';
-import { filter } from 'lodash';
+import { filter, partition } from 'lodash';
 
 export class TripList extends Component {
   constructor(props) {
@@ -12,6 +12,11 @@ export class TripList extends Component {
     this.state = {openTripId: null}
 
     this.tripClick = e => {
+      const trip = this.props.pastTrips.find(t => t.id === e.target.value) || this.props.futureTrips.find(t => t.id === e.target.value);
+      if (trip && trip.passengers.length < 1) {
+        return null;
+      }
+
       if (this.state.openTripId === e.target.value) {
         this.setState({openTripId: null});
       } else {
@@ -21,14 +26,10 @@ export class TripList extends Component {
   }
 
   renderTripCard(trip) {
-    const passengers = compact(filter(trip.passengers, p => p.id !== this.props.ownId)
-      .map(p => ({ ...p, ...this.props.users[p.id] })))
-      .sort((pa, pb) => pa.accepted ^ pb.accepted);
-
     let tripProps;
     if (trip.invitedBy) {
       tripProps = {
-        invitedBy: this.props.users[trip.invitedBy],
+        invitedBy: trip.invitedBy,
         accepted: trip.accepted,
         type: 'journey',
       };
@@ -41,9 +42,10 @@ export class TripList extends Component {
         key={trip.id}
         id={trip.id}
         departAt={trip.departAt}
-        passengers={passengers}
+        passengers={trip.passengers}
         destination={trip.destination}
         transportMethod={trip.transportMethod}
+        inPast={trip.inPast}
         open={trip.id === this.state.openTripId}
         onClick={this.tripClick}
         {...tripProps}
@@ -51,13 +53,57 @@ export class TripList extends Component {
     );
   }
 
-  render() {
+  renderPastTrips() {
+    return (
+      <div>
+        <Header>Past Trips</Header>
+        {this.props.pastTrips.map(t => this.renderTripCard(t))}
+      </div>
+    )
+  }
+
+  renderFutureTrips() {
+    return (
+      <div>
+        <Header>Upcoming Trips</Header>
+        {this.props.futureTrips.map(t => this.renderTripCard(t))}
+      </div>
+    )
+  }
+
+  renderTripDivider() {
     return (
       <div style={{
-        width: "80%",
-        maxWidth: "40rem",
+        width: "90%",
+        margin: "0 auto 2rem",
       }}>
-        {this.props.trips.map(t => this.renderTripCard(t))}
+        <Divider />
+      </div>
+    );
+  }
+
+  render() {
+    const containerStyle = {
+      width: "80%",
+      maxWidth: "40rem",
+    };
+
+    const hasPastTrips = this.props.pastTrips.length > 0;
+    const hasFutureTrips = this.props.futureTrips.length > 0;
+
+    if (!hasPastTrips && !hasFutureTrips) {
+      return (
+        <div style={containerStyle}>
+          <div>You have no trips!</div>
+        </div>
+      );
+    }
+
+    return (
+      <div style={containerStyle}>
+        {hasFutureTrips && this.renderFutureTrips()}
+        {hasPastTrips && hasFutureTrips && this.renderTripDivider()}
+        {hasPastTrips && this.renderPastTrips()}
       </div>
     );
   }
@@ -68,10 +114,25 @@ const mapStateToProps = (state) => {
   const journeys = map(state.journeys, (journey, id) => ({ id, ...journey }));
   const allTrips = trips.concat(journeys).sort((a, b) => b.departAt - a.departAt);
 
+  const filteredTrips = allTrips.map(t => {
+    const passengers = filter(t.passengers, p => p.id !== state.config.id)
+      .map(p => ({ ...p, ...state.users[p.id] }))
+      .sort((pa, pb) => pa.accepted ? -1 : 1);
+
+    return {
+      ...t,
+      inPast: Date.now() > t.departAt,
+      invitedBy: state.users[t.invitedBy] || t.invitedBy,
+      passengers: passengers,
+    }
+  }
+  );
+
+  const [pastTrips, futureTrips] = partition(filteredTrips, 'inPast');
+
   return {
-    trips: allTrips,
-    users: state.users,
-    ownId: state.config.id,
+    pastTrips: pastTrips,
+    futureTrips: futureTrips,
   };
 };
 

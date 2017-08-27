@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Card, Comment, Header, Image, Icon } from 'semantic-ui-react';
+import { Button, Card, Comment, Header, Image, Icon, Loader } from 'semantic-ui-react';
 import TimeAgo from 'react-timeago';
 import { filter } from 'lodash';
+import axios from 'axios';
+import { addUserById } from '../store/users/actions';
 
-export default class TripDetails extends Component {
+const transportToIcon = {
+  car: 'car',
+  walk: 'blind',
+  ship: 'ship',
+  plane: 'military',
+  bus: 'bus',
+}
+
+export class TripDetails extends Component {
   constructor(props) {
     super(props);
-    this.inPast = Date.now() > this.props.departAt;
+    this.state = { recentlyAccepted: false, accepted: props.accepted, accepting: false, loadInvitingUser: typeof props.invitedBy === 'string' };
+
+    this.onAcceptTrip = this.onAcceptTrip.bind(this);
   }
 
   renderPassengerInformation() {
@@ -29,12 +41,20 @@ export default class TripDetails extends Component {
     )
   }
 
+  componentDidMount() {
+    if (this.state.loadInvitingUser) {
+      // load the person
+      this.props.addUserById(this.props.invitedBy)
+        .then(() => this.setState({ loadInvitingUser: false }))
+    }
+  }
+
   renderPassengerIcon(passenger) {
     if (passenger.accepted) {
       return <Icon name="check" color="green" />;
     }
 
-    if (this.inPast) {
+    if (this.props.inPast) {
       return <Icon name="remove" color="red" />;
     }
 
@@ -44,7 +64,7 @@ export default class TripDetails extends Component {
   renderPassengerCard(passenger, bottomRadius) {
     const backgroundColor = passenger.accepted
       ? "#e8f8ec"
-      : this.inPast
+      : this.props.inPast
         ? "#fbe9e9"
         : "";
 
@@ -90,35 +110,96 @@ export default class TripDetails extends Component {
     )
   }
 
+  onAcceptTrip(e) {
+    e.stopPropagation();
+    if (this.state.accepting) {
+      return;
+    }
+    this.setState({ accepting: true });
+    // do request here
+    axios.post(`/trips/${this.props.id}/accept`)
+      .then(() => this.setState({ accepting: false, recentlyAccepted: true }))
+      .then(() => setTimeout(() => this.setState({ recentlyAccepted: false, accepted: true }), 500))
+  }
+
+  getAcceptButton(canAccept) {
+    if (!canAccept || this.state.accepted || this.props.inPast) {
+      return null;
+    }
+
+    return (
+      <Card.Meta>
+        <div style={{ marginTop: 10 }}>
+          <Button
+            basic={!this.state.recentlyAccepted}
+            color="green"
+            onClick={this.onAcceptTrip}
+            loading={this.state.accepting}
+            style={{ width: '100%' }}
+          >
+            Accept
+          </Button>
+        </div>
+      </Card.Meta>
+    )
+  }
+
   getTripDetails() {
-    const tripOwnerImager = this.props.invitedBy
-      ? <Image floated='right' size='mini' src={this.props.invitedBy.photo} />
+    if (this.state.loadInvitingUser) {
+      return (
+        <div style={{
+          width: "100%",
+          marginBottom: "1rem",
+        }}>
+          <Card fluid link style={{ padding: '1rem' }}>
+            <Card.Content>
+              <Loader active />
+            </Card.Content>
+          </Card>
+        </div>
+      );
+    }
+    const tripOwnerImage = this.props.invitedBy
+      ? <Image floated='right' shape="rounded" size='mini' src={this.props.invitedBy.photo} />
       : null;
+
+    const canAccept = this.props.type === 'journey';
 
     const tripOwnerName = this.props.type === 'journey'
       ? `${this.props.invitedBy.firstName}'s Trip`
       : 'Your Trip';
+
+    const numPassengers = Object.keys(this.props.passengers).length;
 
     return (
       <div style={{
         width: "100%",
         marginBottom: "1rem",
       }}>
-        <Card fluid link>
+        <Card fluid link={numPassengers > 0}>
           <Card.Content>
-            {tripOwnerImager}
+            <div style={{
+              marginLeft: "-35px",
+            }}>
+              {tripOwnerImage}
+            </div>
             <Card.Header>
               {tripOwnerName}
+              <Icon style={{ marginLeft: 5 }} name={transportToIcon[this.props.transportMethod]}/>
             </Card.Header>
             <Card.Meta>
-              <span>{`${this.inPast ? 'Left for' : 'Leaving for'} ${this.props.destination}${this.inPast ? '' : ' in'}`}</span>
+              <span>{`${this.props.inPast ? 'Left for' : 'Leaving for'} ${this.props.destination}${this.props.inPast ? '' : ' in'}`}</span>
               <TimeAgo date={this.props.departAt} />
             </Card.Meta>
             <Card.Meta>
-              <div style={{ marginRight: "0" }}>
-                <strong>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{Object.keys(this.props.passengers).length}</strong> have accepted.
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                  <strong style={{ marginRight: "0" }}>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
+                </div>
+                {(this.state.accepted || !canAccept) ? <div style={{ paddingRight: (this.props.open ? "1.25rem" : "0") }}><Icon name="check" color="green" /></div> : null }
               </div>
             </Card.Meta>
+            { this.getAcceptButton(canAccept) }
           </Card.Content>
           {this.renderPassengerInformation()}
         </Card>
@@ -128,7 +209,7 @@ export default class TripDetails extends Component {
 
   render() {
     return (
-      <div 
+      <div
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -144,3 +225,5 @@ export default class TripDetails extends Component {
     )
   }
 }
+
+export default connect(() => ({}), { addUserById })(TripDetails);
