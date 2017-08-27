@@ -50,7 +50,7 @@ export function addUsers(users) {
 
     return Promise.all(newUsers.map(u => getPhoto(u).then(url => [u.id, url])))
       .then(things => things.map(
-        [id, url] => dispatch({
+      ([id, url]) => dispatch({
           type: '@USERS/UPDATE',
           payload: { id: id, newState: { photo: url } }
         })
