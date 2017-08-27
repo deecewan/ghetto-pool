@@ -1,6 +1,9 @@
 
 function get_data(postcodes) {
-    var host = "http://secret.ghettopool.party"
+    var host = "https://secret.ghettopool.party"
+    if (location.hostname !== "") {
+        host = ""
+    }
     console.log("query started")
     console.log("Host:"+ host + " Postcodes: " + postcodes)
     $.get( host + "/?postcodes=" + postcodes, function( data ) {
@@ -25,7 +28,7 @@ function gen_html(loc) {
             "<div class='card-block'>" +
             "<h4 class='card-title'>"+loc.streetAddress+"</h4>" +
             "<p class='card-text'>"+loc.suburb + " " + loc.state +"<p>Status: <span class='avaliability'>Free!</span></p></p>" +
-            "<a href='https://ghettopool.party' class='btn btn-primary'>Start a ghetto pool to this pool</a>" +
+            "<a href='https://www.ghettopool.party' class='btn btn-primary'>Start a ghetto pool to this pool</a>" +
             "</div>" +
             "</div>"
 }
