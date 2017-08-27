@@ -6,13 +6,7 @@ export function getJourneys() {
   return (dispatch, getState) => {
     axios.get('/trips/journeys')
       .then(res => {
-        const state = getState();
-        const me = state.config.id;
-        const trips = Object.keys(state.trips);
-        const newTrips = res.data.trips
-          .filter(trip => !trips.includes(trip.id.toString()))
-          .filter(trip => trip.user_id !== me);
-
+        const newTrips = res.data.trips;
         const passengers = compose(uniqBy('id'), flatten, map('passengers'))(newTrips);
         const passengerIds = map('id')(passengers);
 
