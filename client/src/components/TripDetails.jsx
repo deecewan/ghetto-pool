@@ -157,7 +157,7 @@ export class TripDetails extends Component {
     }
 
     return (
-      <Modal trigger={<Button>Open Map</Button>} basic>
+      <Modal trigger={<Button icon="map outline"/>} basic>
         <Modal.Content>
           <TripMap centerId={this.props.userId} fbUserIds={map(this.props.passengers, 'id').concat([this.props.userId, this.props.ownId])} />
         </Modal.Content>
@@ -217,8 +217,10 @@ export class TripDetails extends Component {
                 <div>
                   <strong style={{ marginRight: "0" }}>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
                 </div>
-                {(this.state.accepted || !canAccept) ? <div style={{ paddingRight: (this.props.open ? "1.25rem" : "0") }}><Icon name="check" color="green" /></div> : null }
-                {this.renderMap()}
+                <div>
+                  {(this.state.accepted || !canAccept) ? <div style={{ textAlign: 'center', paddingRight: (this.props.open ? "1.25rem" : "0") }}><Icon name="check" color="green" /></div> : null }
+                  {this.renderMap()}
+                </div>
               </div>
             </Card.Meta>
             { this.getAcceptButton(canAccept) }

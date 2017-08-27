@@ -27,7 +27,7 @@ class Background {
 
   start() {
     this.doThings();
-    this.interval = setInterval(() => this.doThings(), 10000);
+    this.interval = setInterval(() => this.doThings(), 2000);
   }
 
   stop() {
