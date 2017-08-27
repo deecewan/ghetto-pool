@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Divider, Header } from 'semantic-ui-react';
 import map from 'lodash/map';
 import TripDetails from './TripDetails';
-import { filter, partition } from 'lodash';
+import { filter, partition, isObject } from 'lodash';
 
 export class TripList extends Component {
   constructor(props) {
@@ -34,7 +34,9 @@ export class TripList extends Component {
         type: 'journey',
       };
     } else {
-      tripProps = { type: 'trip' };
+      tripProps = {
+        type: 'trip',
+      };
     }
 
     return (
@@ -48,6 +50,7 @@ export class TripList extends Component {
         inPast={trip.inPast}
         open={trip.id === this.state.openTripId}
         onClick={this.tripClick}
+        userId={trip.userId}
         {...tripProps}
       />
     );
@@ -123,6 +126,7 @@ const mapStateToProps = (state) => {
       ...t,
       inPast: Date.now() > t.departAt,
       invitedBy: state.users[t.invitedBy] || t.invitedBy,
+      userId: t.invitedBy || state.config.userId,
       passengers: passengers,
     }
   }

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Card, Comment, Header, Image, Icon, Loader } from 'semantic-ui-react';
+import { Button, Card, Comment, Header, Modal, Image, Icon, Loader } from 'semantic-ui-react';
 import TimeAgo from 'react-timeago';
-import { filter } from 'lodash';
+import { map, filter } from 'lodash';
 import axios from 'axios';
 import { addUserById } from '../store/users/actions';
+import TripMap from './TripMap';
 
 const transportToIcon = {
   car: 'car',
@@ -17,7 +18,13 @@ const transportToIcon = {
 export class TripDetails extends Component {
   constructor(props) {
     super(props);
-    this.state = { recentlyAccepted: false, accepted: props.accepted, accepting: false, loadInvitingUser: typeof props.invitedBy === 'string' };
+    this.state = {
+      recentlyAccepted: false,
+      accepted: props.accepted,
+      accepting: false,
+      loadInvitingUser: typeof props.invitedBy === 'string',
+      mapOpen: false,
+    };
 
     this.onAcceptTrip = this.onAcceptTrip.bind(this);
   }
@@ -144,6 +151,20 @@ export class TripDetails extends Component {
     )
   }
 
+  renderMap() {
+    if (this.props.inPast) {
+      return null;
+    }
+
+    return (
+      <Modal trigger={<Button>Open Map</Button>} basic>
+        <Modal.Content>
+          <TripMap centerId={this.props.userId} fbUserIds={map(this.props.passengers, 'id').concat([this.props.userId])} />
+        </Modal.Content>
+      </Modal>
+    )
+  }
+
   getTripDetails() {
     if (this.state.loadInvitingUser) {
       return (
@@ -197,6 +218,7 @@ export class TripDetails extends Component {
                   <strong style={{ marginRight: "0" }}>{filter(this.props.passengers, 'accepted').length}</strong> passengers out of <strong>{numPassengers}</strong> have accepted.
                 </div>
                 {(this.state.accepted || !canAccept) ? <div style={{ paddingRight: (this.props.open ? "1.25rem" : "0") }}><Icon name="check" color="green" /></div> : null }
+                {this.renderMap()}
               </div>
             </Card.Meta>
             { this.getAcceptButton(canAccept) }

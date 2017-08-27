@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     # Locations
     scope :locations do
       post :current, to: 'locations#current'
+      get '/', to: 'locations#get_locations'
     end
 
     scope :trips do

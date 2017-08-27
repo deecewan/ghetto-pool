@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 
-const properties = [];
+let properties = [];
 let starts = [];
 let lockStarts = false;
 
@@ -45,6 +45,7 @@ function getProperties(url, num = 1, response) {
         .then(() => {
           if (starts.length === 0) {
             response.end(JSON.stringify(properties));
+            properties = [];
           }
         })
     })
