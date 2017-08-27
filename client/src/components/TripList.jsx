@@ -51,6 +51,7 @@ export class TripList extends Component {
         open={trip.id === this.state.openTripId}
         onClick={this.tripClick}
         userId={trip.userId}
+        ownId={this.props.ownId}
         {...tripProps}
       />
     );
@@ -137,6 +138,7 @@ const mapStateToProps = (state) => {
   return {
     pastTrips: pastTrips,
     futureTrips: futureTrips,
+    ownId: state.config.id,
   };
 };
 
