@@ -12,8 +12,12 @@ const urlMaker = postcodes => num => `https://services.realestate.com.au/service
 const server = http.createServer((req, res) => {
   const parsed = qs.parse(url.parse(req.url).query);
   if (!parsed.postcodes) {
-    return fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, file) => {
+    const url = req.url;
+    const fileName = (url === '/') ? 'index.html' : url;
+    console.log(url, fileName);
+    return fs.readFile(path.join(__dirname, fileName), (err, file) => {
       if (err) {
+        res.end('404');
         return console.error(err);
       }
 
