@@ -8,7 +8,8 @@ class LocationsController < ApplicationController
   end
 
   def get_locations
-    locations = LocationHistory.where(user_id: User.where(fb_id: (current_user.fb_friend_ids + [current_user.fb_id]) & params[:fb_user_ids].split(',')).select(:id))
+    valid_fb_ids = (current_user.fb_friend_ids + [current_user.fb_id]) & params[:fb_user_ids].split(',')
+    locations = LocationHistory.where(user_id: User.where(fb_id: valid_fb_ids).select(:id))
       .latest_for_each_user
       .joins(:user).preload(:user)
 

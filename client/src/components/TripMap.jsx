@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Loader, Image } from "semantic-ui-react";
 import GoogleMapReact from "google-map-react";
 import { addLocations } from "../store/locations/actions";
+import { filter } from "lodash";
 
 const CustomMarker = ({ firstName, photo }) => {
   return (
@@ -32,20 +33,19 @@ class TripMap extends Component {
 
   renderContent() {
     const userLocations = this.props.fbUserIds.map(id => ({ id: id, ...this.props.users[id], ...this.props.locations[id] }));
+    const centerLocation = userLocations.find(l => l.id === this.props.centerId);
 
-    if (this.state.loading) {
+    if (this.state.loading || !centerLocation.lat || !centerLocation.lng) {
       return <Loader active inverted inline size="large">Loading...</Loader>;
     }
-
-    const ownLocation = userLocations.find(l => l.id === this.props.ownId);
 
     return (
       <GoogleMapReact
         apiKey="AIzaSyBqPdx_xX3jLl1KzAp2JqFZDps77sEhhxw"
-        defaultCenter={ownLocation}
+        defaultCenter={centerLocation}
         defaultZoom={15}
       >
-        {userLocations.map(({id, photo, firstName, lat, lng}) => (
+        {filter(userLocations, ul => ul.lat && ul.lng).map(({id, photo, firstName, lat, lng}) => (
           <CustomMarker
             key={id}
             lat={lat}
@@ -76,7 +76,6 @@ const mapStateToProps = (state) => (
   {
     locations: state.locations,
     users: state.users,
-    ownId: state.config.id,
   }
 );
 
